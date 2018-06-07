@@ -17,7 +17,7 @@ import java.util.Objects;
 @Table(name = "at_notification_templates")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "atnotificationtemplates")
-public class AtNotificationTemplates implements Serializable {
+public class AtNotificationTemplates extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

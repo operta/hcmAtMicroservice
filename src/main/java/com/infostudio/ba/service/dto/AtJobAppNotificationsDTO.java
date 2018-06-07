@@ -1,6 +1,7 @@
 package com.infostudio.ba.service.dto;
 
 
+import java.time.Instant;
 import java.time.LocalDate;
 import javax.validation.constraints.*;
 import java.io.Serializable;
@@ -24,6 +25,47 @@ public class AtJobAppNotificationsDTO implements Serializable {
     private Long idJobApplicationId;
 
     private Long idNotificationId;
+
+    private String createdBy;
+
+    private Instant createdAt;
+
+    private String updatedBy;
+
+    private Instant updatedAt;
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
 
     public Long getId() {
         return id;

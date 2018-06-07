@@ -15,10 +15,10 @@ import java.util.Objects;
  * A AtApplicantsDocuments.
  */
 @Entity
-@Table(name = "aad")
+@Table(name = "at_applicants_documents")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "at_applicants_documents")
-public class AtApplicantsDocuments implements Serializable {
+public class AtApplicantsDocuments extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

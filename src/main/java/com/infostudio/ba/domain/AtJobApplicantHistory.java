@@ -13,10 +13,10 @@ import java.util.Objects;
  * A AtJobApplicantHistory.
  */
 @Entity
-@Table(name = "at_job_applicant_history")
+@Table(name = "at_job_application_history")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "atjobapplicanthistory")
-public class AtJobApplicantHistory implements Serializable {
+public class AtJobApplicantHistory extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

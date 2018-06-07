@@ -18,7 +18,7 @@ import java.util.Objects;
 @Table(name = "at_job_applications")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "atjobapplications")
-public class AtJobApplications implements Serializable {
+public class AtJobApplications extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -45,7 +45,7 @@ public class AtJobApplications implements Serializable {
     private Integer testGrade;
 
     @OneToOne
-    @JoinColumn(name = "applicant_id")
+    @JoinColumn(name = "applicantid")
     private AtApplicants applicantId;
 
     @OneToOne
@@ -53,7 +53,7 @@ public class AtJobApplications implements Serializable {
     private AtJobApplicationStatuses idStatus;
 
     @OneToOne
-    @JoinColumn(name = "vacancy_id")
+    @JoinColumn(name = "vacancyid")
     private AtVacancies vacancyId;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove

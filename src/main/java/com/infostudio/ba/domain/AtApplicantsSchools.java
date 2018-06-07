@@ -17,7 +17,7 @@ import java.util.Objects;
 @Table(name = "at_applicants_schools")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "atapplicantsschools")
-public class AtApplicantsSchools implements Serializable {
+public class AtApplicantsSchools extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -50,7 +50,7 @@ public class AtApplicantsSchools implements Serializable {
     @Column(name = "link")
     private String link;
 
-    @Column(name = "id_qualifcation")
+    @Column(name = "id_qualification")
     private Integer idQualifcation;
 
     @Column(name = "id_school")
