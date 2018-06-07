@@ -1,0 +1,42 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idApplicant",
+            "otherEntityName": "atApplicants",
+            "otherEntityField": "surname",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atApplicantsSkills"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "skill",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateSkill",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "grade",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "idSkill",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "idGrade",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180607092331",
+    "entityTableName": "at_applicants_skills",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

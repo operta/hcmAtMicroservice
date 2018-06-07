@@ -1,0 +1,62 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "applicantId",
+            "otherEntityName": "atApplicants",
+            "otherEntityField": "surname",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJobApplications"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idStatus",
+            "otherEntityName": "atJobApplicationStatuses",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJobApplications"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "vacancyId",
+            "otherEntityName": "atVacancies",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJobApplications"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "grade",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "review",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "dateApplied",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "interviewGrade",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "testGrade",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180607092332",
+    "entityTableName": "at_job_applications",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

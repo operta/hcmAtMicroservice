@@ -1,0 +1,46 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idApplicant",
+            "otherEntityName": "atApplicants",
+            "otherEntityField": "surname",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atApplicantExperiences"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "company",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "position",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "location",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateFrom",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "dateTo",
+            "fieldType": "Instant"
+        },
+        {
+            "fieldName": "ongoing",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180607092333",
+    "entityTableName": "at_applicant_experiences",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

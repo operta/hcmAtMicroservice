@@ -1,0 +1,233 @@
+entity AtApplicants {
+	id Integer required,
+    name String required,
+    surname String,
+    middleName String,
+    maidenName String,
+    gender String,
+    birthdate LocalDate,
+    materialStatus String,
+    address String,
+    employed String,
+    description String,
+    employementPosition String,
+    industry String,
+    phoneNumber String,
+    email String,
+    imageLink String,
+    idCity Integer,
+    idQualifcation Integer,
+    idEmployee Integer,
+    idUser Integer
+}
+
+entity AtApplicantsSchools {
+	id Integer required,
+    school String,
+    dateFrom LocalDate,
+    dateTo LocalDate,
+    major String,
+    degree String,
+    grade Integer,
+    description String,
+    link String,
+    idQualifcation Integer,
+    idSchool Integer,
+
+}
+
+
+entity AtApplicantsDocuments {
+	id Integer required,
+    name String required,
+    description String,
+    dateCreated LocalDate,
+    validFrom LocalDate,
+    validTo LocalDate,
+    idDocumentLink Integer,
+    idDocumentType Integer
+}
+
+entity AtApplicantsSkills {
+	id Integer required,
+    skill String,
+    dateSkill Instant,
+    grade String,
+    idSkill Integer,
+    idGrade Integer
+}
+
+entity AtJobApplications {
+	id Integer required,
+    grade Integer,
+    review TextBlob,
+    dateApplied LocalDate required,
+    interviewGrade Integer,
+    testGrade Integer,
+}
+
+entity AtApplicantExperiences {
+	id Integer required,
+    company String,
+    position String,
+    location String,
+    dateFrom Instant,
+    dateTo Instant,
+    ongoing String,
+}
+
+entity AtApplicantsContacts {
+	id Integer required,
+    contact String required,
+    description String,
+    idContactType Integer
+}
+
+entity AtAccomplishmentTypes {
+	id Integer required,
+    code String required,
+    name String required,
+    description String,
+}
+
+entity AtApplicantAcc {
+	id Integer required,
+    title String required,
+    description String,
+    organization String,
+    location String,
+    association String,
+    ongoing String,
+    link String,
+    dateFrom LocalDate,
+    dateTo LocalDate,
+    occupation String,
+    proficiency String,
+    licenceNumber String
+}
+
+entity AtActivities {
+	id Integer required,
+    code String required,
+    name String required,
+    description String
+}
+
+entity AtJAActivities {
+	id Integer required,
+    grade Integer,
+    review TextBlob,
+    dateActivity LocalDate required
+}
+
+entity AtActivityStatuses {
+ 	id Integer required,
+    code String required,
+    name String required,
+    description String
+}
+
+
+entity AtJobAppNotifications {
+	id Integer required,
+    dateSent LocalDate required,
+    isActive String required
+}
+
+entity AtNotificationTemplates {
+	id Integer required,
+    code String required,
+    subject String,
+    template TextBlob
+}
+
+entity AtJobApplicantHistory {
+	id Integer required,
+}
+
+entity AtJobApplicationStatuses {
+	id Integer required,
+    code String required,
+    name String required,
+    description String,
+}
+
+entity AtVacancies {
+	id Integer required,
+    code String required,
+    name String required,
+    description TextBlob,
+    dateFrom LocalDate,
+    dateTo LocalDate,
+    status Integer,
+    jobRole String,
+    jobWorkingTime String,
+    skillsRequirement TextBlob,
+    languageRequirement String,
+    educationRequirement String,
+    experienceRequirement TextBlob,
+    idLocation Integer,
+    idWorkPlace Integer
+}
+
+
+
+entity AtJAInt {
+	id Integer required,
+    grade Integer,
+    description TextBlob,
+    locationId Integer,
+    interviewDate LocalDate
+}
+
+entity  AtJobApplicationsTests {
+	id Integer required,
+    score Integer,
+    jobApplicationId Integer,
+    locationId Integer,
+    testDate LocalDate,
+    review String,
+    shortDescription String
+}
+
+entity AtVacanciesSkills {
+	id Integer required,
+    skillId Integer required,
+    gradeId Integer required
+}
+
+entity AtVacanciesStatuses {
+	id Integer required,
+    status String
+}
+
+relationship OneToOne {
+     AtApplicantsSchools{idApplicant(surname)} to AtApplicants
+     AtApplicantsContacts{idApllicant(surname)} to AtApplicants
+     AtApplicantExperiences{idApplicant(surname)} to AtApplicants
+     AtApplicantsSkills{idApplicant(surname)} to AtApplicants
+     AtJobApplications{applicantId(surname)} to AtApplicants
+     AtApplicantsDocuments{idApplicant(surname)} to AtApplicants
+     AtApplicantAcc{idAccomplishmentType(name)} to AtAccomplishmentTypes
+     AtApplicantAcc{idApplicant(surname)} to AtApplicants
+     AtJAActivities{idActivity(name)} to AtActivities
+     AtJAActivities{idJobApplication} to AtJobApplications
+     AtJAActivities{idStatus(name)} to AtActivityStatuses
+     AtJobAppNotifications{idJobApplication} to AtJobApplications
+     AtJobAppNotifications{idNotification} to AtNotificationTemplates
+     AtJobApplicantHistory{idStatusFrom(name)} to AtJobApplicationStatuses
+     AtJobApplicantHistory{idStatusTo(name)} to AtJobApplicationStatuses
+     AtJobApplicantHistory{idJobApplication} to AtJobApplications
+     AtJobApplications{idStatus(name)} to AtJobApplicationStatuses
+     AtJobApplications{vacancyId(name)} to AtVacancies
+     AtJAInt{jobApplicationId} to AtJobApplications
+     AtJobApplicationsTests{jobApplicationId} to AtJobApplications
+     AtVacanciesSkills{vacancyId(name)} to AtVacancies
+}
+
+
+paginate * with pagination
+
+
+ dto * with mapstruct
+

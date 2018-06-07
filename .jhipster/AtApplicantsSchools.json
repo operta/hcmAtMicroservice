@@ -1,0 +1,62 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idApplicant",
+            "otherEntityName": "atApplicants",
+            "otherEntityField": "surname",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atApplicantsSchools"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "school",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateFrom",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "dateTo",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "major",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "degree",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "grade",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "link",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "idQualifcation",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "idSchool",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180607092329",
+    "entityTableName": "at_applicants_schools",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

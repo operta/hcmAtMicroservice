@@ -1,0 +1,39 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "jobApplicationId",
+            "otherEntityName": "atJobApplications",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJAInt"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "grade",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "locationId",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "interviewDate",
+            "fieldType": "LocalDate"
+        }
+    ],
+    "changelogDate": "20180607092345",
+    "entityTableName": "at_ja_int",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

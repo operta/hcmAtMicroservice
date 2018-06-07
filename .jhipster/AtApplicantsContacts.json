@@ -1,0 +1,37 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idApllicant",
+            "otherEntityName": "atApplicants",
+            "otherEntityField": "surname",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atApplicantsContacts"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "contact",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "idContactType",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180607092334",
+    "entityTableName": "at_applicants_contacts",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

@@ -1,0 +1,54 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idActivity",
+            "otherEntityName": "atActivities",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJAActivities"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idJobApplication",
+            "otherEntityName": "atJobApplications",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJAActivities"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idStatus",
+            "otherEntityName": "atActivityStatuses",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJAActivities"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "grade",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "review",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "dateActivity",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20180607092338",
+    "entityTableName": "at_ja_activities",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

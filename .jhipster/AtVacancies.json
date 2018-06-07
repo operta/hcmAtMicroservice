@@ -1,0 +1,78 @@
+{
+    "fluentMethods": true,
+    "relationships": [],
+    "fields": [
+        {
+            "fieldName": "code",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "name",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "description",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "dateFrom",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "dateTo",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "status",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "jobRole",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "jobWorkingTime",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "skillsRequirement",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "languageRequirement",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "educationRequirement",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "experienceRequirement",
+            "fieldType": "byte[]",
+            "fieldTypeBlobContent": "text"
+        },
+        {
+            "fieldName": "idLocation",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "idWorkPlace",
+            "fieldType": "Integer"
+        }
+    ],
+    "changelogDate": "20180607092344",
+    "entityTableName": "at_vacancies",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

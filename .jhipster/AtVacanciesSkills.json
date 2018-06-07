@@ -1,0 +1,36 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "vacancyId",
+            "otherEntityName": "atVacancies",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atVacanciesSkills"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "skillId",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "gradeId",
+            "fieldType": "Integer",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20180607092347",
+    "entityTableName": "at_vacancies_skills",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

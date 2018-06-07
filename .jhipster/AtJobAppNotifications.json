@@ -1,0 +1,44 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idJobApplication",
+            "otherEntityName": "atJobApplications",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJobAppNotifications"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idNotification",
+            "otherEntityName": "atNotificationTemplates",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJobAppNotifications"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "dateSent",
+            "fieldType": "LocalDate",
+            "fieldValidateRules": [
+                "required"
+            ]
+        },
+        {
+            "fieldName": "isActive",
+            "fieldType": "String",
+            "fieldValidateRules": [
+                "required"
+            ]
+        }
+    ],
+    "changelogDate": "20180607092340",
+    "entityTableName": "at_job_app_notifications",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}

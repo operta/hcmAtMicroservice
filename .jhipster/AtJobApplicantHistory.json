@@ -1,0 +1,37 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idStatusFrom",
+            "otherEntityName": "atJobApplicationStatuses",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJobApplicantHistory"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idStatusTo",
+            "otherEntityName": "atJobApplicationStatuses",
+            "otherEntityField": "name",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJobApplicantHistory"
+        },
+        {
+            "relationshipType": "one-to-one",
+            "relationshipName": "idJobApplication",
+            "otherEntityName": "atJobApplications",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atJobApplicantHistory"
+        }
+    ],
+    "fields": [],
+    "changelogDate": "20180607092342",
+    "entityTableName": "at_job_applicant_history",
+    "dto": "mapstruct",
+    "pagination": "pagination",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "microserviceName": "hcmAtMicroservice"
+}
