@@ -45,7 +45,7 @@
         }
     ],
     "changelogDate": "20180607092338",
-    "entityTableName": "at_ja_activities",
+    "entityTableName": "at_job_applications_activities",
     "dto": "mapstruct",
     "pagination": "pagination",
     "service": "no",

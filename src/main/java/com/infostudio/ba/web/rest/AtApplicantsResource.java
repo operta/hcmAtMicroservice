@@ -117,6 +117,8 @@ public class AtApplicantsResource {
         return new ResponseEntity<>(atApplicantsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
 
+
+
     /**
      * GET  /at-applicants/:id : get the "id" atApplicants.
      *
@@ -128,6 +130,21 @@ public class AtApplicantsResource {
     public ResponseEntity<AtApplicantsDTO> getAtApplicants(@PathVariable Long id) {
         log.debug("REST request to get AtApplicants : {}", id);
         AtApplicants atApplicants = atApplicantsRepository.findOne(id);
+        AtApplicantsDTO atApplicantsDTO = atApplicantsMapper.toDto(atApplicants);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsDTO));
+    }
+
+        /**
+     * GET  /at-applicants/:id : get the "id" atApplicants.
+     *
+     * @param id the id of the atApplicantsDTO to retrieve
+     * @return the ResponseEntity with status 200 (OK) and with body the atApplicantsDTO, or with status 404 (Not Found)
+     */
+    @GetMapping("/at-applicants/user/{id}")
+    @Timed
+    public ResponseEntity<AtApplicantsDTO> getApplicantByUserId(@PathVariable Integer id) {
+        log.debug("REST request to get AtApplicants by user id: {}", id);
+        AtApplicants atApplicants = atApplicantsRepository.findByIdUser(id);
         AtApplicantsDTO atApplicantsDTO = atApplicantsMapper.toDto(atApplicants);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsDTO));
     }

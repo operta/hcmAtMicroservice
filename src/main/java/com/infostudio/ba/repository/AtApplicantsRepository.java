@@ -5,6 +5,9 @@ import org.springframework.stereotype.Repository;
 
 import org.springframework.data.jpa.repository.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 
 /**
  * Spring Data JPA repository for the AtApplicants entity.
@@ -12,5 +15,5 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface AtApplicantsRepository extends JpaRepository<AtApplicants, Long> {
-
+    AtApplicants findByIdUser(Integer id);
 }
