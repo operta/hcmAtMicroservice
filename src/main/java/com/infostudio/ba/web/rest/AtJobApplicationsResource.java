@@ -150,6 +150,23 @@ public class AtJobApplicationsResource {
     }
 
     /**
+     * GET  /at-job-applications/vacancy/id/applicant/id
+     *
+     * @param id
+     * @return the ResponseEntity with status 200 (OK) and with body the atJobApplicationsDTO, or with status 404 (Not Found)
+     */
+
+    @GetMapping("/at-job-applications/vacancy/{id}/applicant/{appId}")
+    @Timed
+    public ResponseEntity<Boolean> getAtJobApplicationsByVacIdAndAppId(@PathVariable Long id,
+                                                                       @PathVariable Long appId) {
+        log.debug("REST request to get if exist a AtJobApplication by vacancy id and applicantid  : {}, {}", id, appId);
+
+        Integer numOfRecords = atJobApplicationsRepository.findIfExistsByApplicantAndVacancy(appId, id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(numOfRecords > 0));
+    }
+
+    /**
      * DELETE  /at-job-applications/:id : delete the "id" atJobApplications.
      *
      * @param id the id of the atJobApplicationsDTO to delete
