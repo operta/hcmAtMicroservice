@@ -117,6 +117,8 @@ public class AtJobApplicationsResource {
         return new ResponseEntity<>(atJobApplicationsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
 
+
+
     /**
      * GET  /at-job-applications/:id : get the "id" atJobApplications.
      *
@@ -129,6 +131,21 @@ public class AtJobApplicationsResource {
         log.debug("REST request to get AtJobApplications : {}", id);
         AtJobApplications atJobApplications = atJobApplicationsRepository.findOne(id);
         AtJobApplicationsDTO atJobApplicationsDTO = atJobApplicationsMapper.toDto(atJobApplications);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicationsDTO));
+    }
+
+    /**
+     * GET  /at-job-applications/vacancy/:id
+     *
+     * @param id
+     * @return the ResponseEntity with status 200 (OK) and with body the atJobApplicationsDTO, or with status 404 (Not Found)
+     */
+    @GetMapping("/at-job-applications/vacancy/{id}")
+    @Timed
+    public ResponseEntity<List<AtJobApplicationsDTO>> getAtJobApplicationsByVacId(@PathVariable Long id) {
+        log.debug("REST request to get AtJobApplications by vacancy id : {}", id);
+        List<AtJobApplications> atJobApplications = atJobApplicationsRepository.findByVacancyIdId(id);
+        List<AtJobApplicationsDTO> atJobApplicationsDTO = atJobApplicationsMapper.toDto(atJobApplications);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicationsDTO));
     }
 

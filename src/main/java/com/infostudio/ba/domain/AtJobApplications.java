@@ -6,6 +6,8 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 import org.springframework.data.elasticsearch.annotations.Document;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -46,6 +48,7 @@ public class AtJobApplications extends AbstractAuditingEntity implements Seriali
 
     @OneToOne
     @JoinColumn(name = "applicantid")
+    @NotFound(action = NotFoundAction.IGNORE)
     private AtApplicants applicantId;
 
     @OneToOne
