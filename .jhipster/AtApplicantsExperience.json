@@ -1,0 +1,47 @@
+{
+    "fluentMethods": true,
+    "relationships": [
+        {
+            "relationshipName": "atApplicants",
+            "otherEntityName": "atApplicants",
+            "relationshipType": "one-to-one",
+            "otherEntityField": "id",
+            "ownerSide": true,
+            "otherEntityRelationshipName": "atApplicantsExperience"
+        }
+    ],
+    "fields": [
+        {
+            "fieldName": "company",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "position",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "location",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "dateFrom",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "dateTo",
+            "fieldType": "LocalDate"
+        },
+        {
+            "fieldName": "ongoing",
+            "fieldType": "String"
+        }
+    ],
+    "changelogDate": "20180705132338",
+    "dto": "no",
+    "service": "no",
+    "entityTableName": "aae",
+    "jpaMetamodelFiltering": false,
+    "pagination": "pagination",
+    "microserviceName": "hcmAtMicroservice",
+    "searchEngine": "elasticsearch"
+}
