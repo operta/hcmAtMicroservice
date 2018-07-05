@@ -131,7 +131,7 @@ public class AtJobApplicationsTestsResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicationsTestsDTO));
     }
 
-    @GetMapping("/at-job-applications-tests/jobApplication/{id}")
+    @GetMapping("/at-job-applications-tests/job-application/{id}")
     @Timed
     public ResponseEntity<List<AtJobApplicationsTestsDTO>> getAtJobApplicationsTestsByJobAppId(@PathVariable Long id) {
         log.debug("REST request to get AtJobApplicationsTests by JobApplication Id : {}", id);

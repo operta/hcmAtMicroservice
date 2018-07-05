@@ -131,7 +131,7 @@ public class AtJAIntResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJAIntDTO));
     }
 
-    @GetMapping("/at-ja-ints/jobApplication/{id}")
+    @GetMapping("/at-ja-ints/job-application/{id}")
     @Timed
     public ResponseEntity<List<AtJAIntDTO>> getAtJAIntByJobAppId(@PathVariable Long id) {
         log.debug("REST request to get AtJAInt by JobApplication Id : {}", id);
