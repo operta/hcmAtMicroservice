@@ -1,8 +1,10 @@
 package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
+import com.infostudio.ba.domain.AtJobApplicationStatuses;
 import com.infostudio.ba.domain.AtJobApplications;
 
+import com.infostudio.ba.repository.AtJobApplicationStatusesRepository;
 import com.infostudio.ba.repository.AtJobApplicationsRepository;
 import com.infostudio.ba.repository.search.AtJobApplicationsSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -44,14 +47,18 @@ public class AtJobApplicationsResource {
 
     private final AtJobApplicationsRepository atJobApplicationsRepository;
 
+    private final AtJobApplicationStatusesRepository atJobApplicationStatusesRepository;
+
     private final AtJobApplicationsMapper atJobApplicationsMapper;
 
     private final AtJobApplicationsSearchRepository atJobApplicationsSearchRepository;
 
-    public AtJobApplicationsResource(AtJobApplicationsRepository atJobApplicationsRepository, AtJobApplicationsMapper atJobApplicationsMapper, AtJobApplicationsSearchRepository atJobApplicationsSearchRepository) {
+    public AtJobApplicationsResource(AtJobApplicationsRepository atJobApplicationsRepository, AtJobApplicationsMapper atJobApplicationsMapper, AtJobApplicationsSearchRepository atJobApplicationsSearchRepository,
+                                     AtJobApplicationStatusesRepository atJobApplicationStatusesRepository) {
         this.atJobApplicationsRepository = atJobApplicationsRepository;
         this.atJobApplicationsMapper = atJobApplicationsMapper;
         this.atJobApplicationsSearchRepository = atJobApplicationsSearchRepository;
+        this.atJobApplicationStatusesRepository = atJobApplicationStatusesRepository;
     }
 
     /**
@@ -147,6 +154,29 @@ public class AtJobApplicationsResource {
         List<AtJobApplications> atJobApplications = atJobApplicationsRepository.findByVacancyIdId(id);
         List<AtJobApplicationsDTO> atJobApplicationsDTO = atJobApplicationsMapper.toDto(atJobApplications);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicationsDTO));
+    }
+
+    @PostMapping("/at-job-applications/vacancy/{id}/applicant/{appId}")
+    @Timed
+    public ResponseEntity<AtJobApplicationsDTO> createAtJobApplicationsWithVacIdAndAppId(@PathVariable Long id,
+                                                                                         @PathVariable Long appId) throws URISyntaxException {
+
+        AtJobApplicationStatuses atJobApplicationStatus = this.atJobApplicationStatusesRepository.findByName("Under review");
+        AtJobApplicationsDTO atJobApplicationsDTO = new AtJobApplicationsDTO();
+        atJobApplicationsDTO.setApplicantIdId(appId);
+        atJobApplicationsDTO.setVacancyIdId(id);
+        atJobApplicationsDTO.setDateApplied(LocalDate.now());
+        atJobApplicationsDTO.setIdStatusId(atJobApplicationStatus.getId());
+
+        log.debug("REST request to save AtJobApplications : {}", atJobApplicationsDTO);
+
+        AtJobApplications atJobApplications = atJobApplicationsMapper.toEntity(atJobApplicationsDTO);
+        atJobApplications = atJobApplicationsRepository.save(atJobApplications);
+        AtJobApplicationsDTO result = atJobApplicationsMapper.toDto(atJobApplications);
+        atJobApplicationsSearchRepository.save(atJobApplications);
+        return ResponseEntity.created(new URI("/api/at-job-applications/" + result.getId()))
+            .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
+            .body(result);
     }
 
     /**

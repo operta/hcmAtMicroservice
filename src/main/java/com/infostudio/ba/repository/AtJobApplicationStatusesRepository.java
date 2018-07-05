@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface AtJobApplicationStatusesRepository extends JpaRepository<AtJobApplicationStatuses, Long> {
-
+    AtJobApplicationStatuses findByName(String name);
 }
