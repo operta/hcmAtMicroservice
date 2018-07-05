@@ -68,6 +68,10 @@ public class AtApplicantsResource {
         if (atApplicantsDTO.getId() != null) {
             throw new BadRequestAlertException("A new atApplicants cannot already have an ID", ENTITY_NAME, "idexists");
         }
+        AtApplicants atApplicantInDb = atApplicantsRepository.findByIdUser(atApplicantsDTO.getIdUser());
+        if(atApplicantInDb.getId() != null){
+            throw new BadRequestAlertException("A user can only have one applicant account associated with him", ENTITY_NAME, "idexists");
+        }
         AtApplicants atApplicants = atApplicantsMapper.toEntity(atApplicantsDTO);
         atApplicants = atApplicantsRepository.save(atApplicants);
         AtApplicantsDTO result = atApplicantsMapper.toDto(atApplicants);
