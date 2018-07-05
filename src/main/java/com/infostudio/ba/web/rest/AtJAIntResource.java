@@ -131,6 +131,15 @@ public class AtJAIntResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJAIntDTO));
     }
 
+    @GetMapping("/at-ja-ints/jobApplication/{id}")
+    @Timed
+    public ResponseEntity<List<AtJAIntDTO>> getAtJAIntByJobAppId(@PathVariable Long id) {
+        log.debug("REST request to get AtJAInt by JobApplication Id : {}", id);
+        List<AtJAInt> atJAInt = atJAIntRepository.findByJobApplicationIdId(id);
+        List<AtJAIntDTO> atJAIntDTO = atJAIntMapper.toDto(atJAInt);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJAIntDTO));
+    }
+
     /**
      * DELETE  /at-ja-ints/:id : delete the "id" atJAInt.
      *

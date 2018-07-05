@@ -131,6 +131,15 @@ public class AtJobApplicationsTestsResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicationsTestsDTO));
     }
 
+    @GetMapping("/at-job-applications-tests/jobApplication/{id}")
+    @Timed
+    public ResponseEntity<List<AtJobApplicationsTestsDTO>> getAtJobApplicationsTestsByJobAppId(@PathVariable Long id) {
+        log.debug("REST request to get AtJobApplicationsTests by JobApplication Id : {}", id);
+        List<AtJobApplicationsTests> atJobApplicationsTests = atJobApplicationsTestsRepository.findByJobApplicationIdId(id);
+        List<AtJobApplicationsTestsDTO> atJobApplicationsTestsDTO = atJobApplicationsTestsMapper.toDto(atJobApplicationsTests);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicationsTestsDTO));
+    }
+
     /**
      * DELETE  /at-job-applications-tests/:id : delete the "id" atJobApplicationsTests.
      *

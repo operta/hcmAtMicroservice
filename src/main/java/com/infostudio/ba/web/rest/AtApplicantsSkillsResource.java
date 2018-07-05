@@ -131,6 +131,15 @@ public class AtApplicantsSkillsResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsSkillsDTO));
     }
 
+    @GetMapping("/at-applicants-skills/applicant/{id}")
+    @Timed
+    public ResponseEntity<List<AtApplicantsSkillsDTO>> getAtApplicantsSkillsByAppId(@PathVariable Long id) {
+        log.debug("REST request to get AtApplicantsSkills by Applicant Id : {}", id);
+        List<AtApplicantsSkills> atApplicantsSkills = atApplicantsSkillsRepository.findByIdApplicantId(id);
+        List<AtApplicantsSkillsDTO> atApplicantsSkillsDTO = atApplicantsSkillsMapper.toDto(atApplicantsSkills);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsSkillsDTO));
+    }
+
     /**
      * DELETE  /at-applicants-skills/:id : delete the "id" atApplicantsSkills.
      *

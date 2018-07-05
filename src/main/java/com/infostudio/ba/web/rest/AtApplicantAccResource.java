@@ -132,6 +132,15 @@ public class AtApplicantAccResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantAccDTO));
     }
 
+    @GetMapping("/at-applicant-accs/applicant/{id}")
+    @Timed
+    public ResponseEntity<List<AtApplicantAccDTO>> getAtApplicantAccByAppId(@PathVariable Long id) {
+        log.debug("REST request to get AtApplicantAcc by Applicant Id : {}", id);
+        List<AtApplicantAcc> atApplicantAcc = atApplicantAccRepository.findByIdApplicantId(id);
+        List<AtApplicantAccDTO> atApplicantAccDTO = atApplicantAccMapper.toDto(atApplicantAcc);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantAccDTO));
+    }
+
     /**
      * DELETE  /at-applicant-accs/:id : delete the "id" atApplicantAcc.
      *
