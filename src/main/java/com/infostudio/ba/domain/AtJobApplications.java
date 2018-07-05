@@ -48,7 +48,7 @@ public class AtJobApplications extends AbstractAuditingEntity implements Seriali
 
     @OneToOne
     @JoinColumn(name = "applicantid")
-    @NotFound(action = NotFoundAction.IGNORE)
+    // @NotFound(action = NotFoundAction.IGNORE)
     private AtApplicants applicantId;
 
     @OneToOne
