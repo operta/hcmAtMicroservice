@@ -14,7 +14,7 @@ import java.util.Objects;
  * A AtApplicantsExperience.
  */
 @Entity
-@Table(name = "at_applicants_experience")
+@Table(name = "at_applicant_experiences")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Document(indexName = "atapplicantsexperience")
 public class AtApplicantsExperience implements Serializable {
