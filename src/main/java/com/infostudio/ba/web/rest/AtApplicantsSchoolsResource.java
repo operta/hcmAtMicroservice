@@ -131,6 +131,15 @@ public class AtApplicantsSchoolsResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsSchoolsDTO));
     }
 
+    @GetMapping("/at-applicants-schools/applicant/{id}")
+    @Timed
+    public ResponseEntity<List<AtApplicantsSchoolsDTO>> getAtApplicantsSchoolsByAppId(@PathVariable Long id) {
+        log.debug("REST request to get AtApplicantsSchools by Applicant Id : {}", id);
+        List<AtApplicantsSchools> atApplicantsSchools = atApplicantsSchoolsRepository.findByIdApplicantId(id);
+        List<AtApplicantsSchoolsDTO> atApplicantsSchoolsDTO = atApplicantsSchoolsMapper.toDto(atApplicantsSchools);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsSchoolsDTO));
+    }
+
     /**
      * DELETE  /at-applicants-schools/:id : delete the "id" atApplicantsSchools.
      *

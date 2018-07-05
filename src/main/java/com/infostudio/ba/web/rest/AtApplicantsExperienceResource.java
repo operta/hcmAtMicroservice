@@ -121,6 +121,14 @@ public class AtApplicantsExperienceResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsExperience));
     }
 
+    @GetMapping("/at-applicants-experiences/applicant/{id}")
+    @Timed
+    public ResponseEntity<List<AtApplicantsExperience>> getAtApplicantsExperienceByAppId(@PathVariable Long id) {
+        log.debug("REST request to get AtApplicantsExperience by Applicant Id : {}", id);
+        List<AtApplicantsExperience> atApplicantsExperience = atApplicantsExperienceRepository.findByAtApplicantsId(id);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsExperience));
+    }
+
     /**
      * DELETE  /at-applicants-experiences/:id : delete the "id" atApplicantsExperience.
      *
