@@ -131,6 +131,15 @@ public class AtJobApplicantHistoryResource {
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicantHistoryDTO));
     }
 
+    @GetMapping("/at-job-applicant-histories/job-application/{id}")
+    @Timed
+    public ResponseEntity<List<AtJobApplicantHistoryDTO>> getAtJobApplicantHistoryByJobAppId(@PathVariable Long id) {
+        log.debug("REST request to get AtJobApplicantHistoryDTO by JobApplication Id : {}", id);
+        List<AtJobApplicantHistory> items = atJobApplicantHistoryRepository.findByIdJobApplicationId(id);
+        List<AtJobApplicantHistoryDTO> itemsDTO = atJobApplicantHistoryMapper.toDto(items);
+        return ResponseUtil.wrapOrNotFound(Optional.ofNullable(itemsDTO));
+    }
+
     /**
      * DELETE  /at-job-applicant-histories/:id : delete the "id" atJobApplicantHistory.
      *
