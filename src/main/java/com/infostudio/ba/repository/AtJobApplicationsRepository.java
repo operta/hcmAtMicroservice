@@ -16,6 +16,7 @@ import java.util.List;
 @Repository
 public interface AtJobApplicationsRepository extends JpaRepository<AtJobApplications, Long> {
     List<AtJobApplications> findByVacancyIdId(long id);
+    List<AtJobApplications> findByApplicantIdId(Long id);
 
 
     @Query("SELECT COUNT(at.id) FROM AtJobApplications at WHERE at.applicantId.id=:atId AND at.vacancyId.id=:vId")
