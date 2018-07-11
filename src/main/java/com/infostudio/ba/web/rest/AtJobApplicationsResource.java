@@ -1,11 +1,9 @@
 package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.infostudio.ba.domain.AtJobApplicationStatuses;
-import com.infostudio.ba.domain.AtJobApplications;
+import com.infostudio.ba.domain.*;
 
-import com.infostudio.ba.repository.AtJobApplicationStatusesRepository;
-import com.infostudio.ba.repository.AtJobApplicationsRepository;
+import com.infostudio.ba.repository.*;
 import com.infostudio.ba.repository.search.AtJobApplicationsSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
@@ -49,16 +47,28 @@ public class AtJobApplicationsResource {
 
     private final AtJobApplicationStatusesRepository atJobApplicationStatusesRepository;
 
+    private final AtJobApplicantHistoryRepository atJobApplicantHistoryRepository;
+
     private final AtJobApplicationsMapper atJobApplicationsMapper;
 
     private final AtJobApplicationsSearchRepository atJobApplicationsSearchRepository;
 
+    private final AtNotificationTemplatesRepository atNotificationTemplatesRepository;
+
+    private final AtJobAppNotificationsRepository atJobAppNotificationsRepository;
+
     public AtJobApplicationsResource(AtJobApplicationsRepository atJobApplicationsRepository, AtJobApplicationsMapper atJobApplicationsMapper, AtJobApplicationsSearchRepository atJobApplicationsSearchRepository,
-                                     AtJobApplicationStatusesRepository atJobApplicationStatusesRepository) {
+                                     AtJobApplicationStatusesRepository atJobApplicationStatusesRepository,
+                                     AtJobApplicantHistoryRepository atJobApplicantHistoryRepository,
+                                     AtNotificationTemplatesRepository atNotificationTemplatesRepository,
+                                     AtJobAppNotificationsRepository atJobAppNotificationsRepository) {
         this.atJobApplicationsRepository = atJobApplicationsRepository;
         this.atJobApplicationsMapper = atJobApplicationsMapper;
         this.atJobApplicationsSearchRepository = atJobApplicationsSearchRepository;
         this.atJobApplicationStatusesRepository = atJobApplicationStatusesRepository;
+        this.atJobApplicantHistoryRepository = atJobApplicantHistoryRepository;
+        this.atNotificationTemplatesRepository = atNotificationTemplatesRepository;
+        this.atJobAppNotificationsRepository = atJobAppNotificationsRepository;
     }
 
     /**
@@ -100,7 +110,33 @@ public class AtJobApplicationsResource {
         if (atJobApplicationsDTO.getId() == null) {
             return createAtJobApplications(atJobApplicationsDTO);
         }
+        AtJobApplications oldJobApplication = atJobApplicationsRepository.findOne(atJobApplicationsDTO.getId());
         AtJobApplications atJobApplications = atJobApplicationsMapper.toEntity(atJobApplicationsDTO);
+        if(atJobApplications.getIdStatus() != null && oldJobApplication.getIdStatus() != null){
+            if(!atJobApplications.getIdStatus().getId().equals(oldJobApplication.getIdStatus().getId())){
+                AtJobApplicantHistory jobApplicantHistory = new AtJobApplicantHistory();
+                jobApplicantHistory.setIdJobApplication(atJobApplications);
+                jobApplicantHistory.setIdStatusFrom(oldJobApplication.getIdStatus());
+                jobApplicantHistory.setIdStatusTo(atJobApplications.getIdStatus());
+
+                jobApplicantHistory = atJobApplicantHistoryRepository.save(jobApplicantHistory);
+
+                AtJobAppNotifications jobAppNotifications = new AtJobAppNotifications();
+                jobAppNotifications.setDateSent(LocalDate.now());
+                jobAppNotifications.setIdJobApplication(atJobApplications);
+                jobAppNotifications.setIsActive("Y");
+
+                List<AtNotificationTemplates> notificationTemplates = atNotificationTemplatesRepository.findAll();
+
+                jobAppNotifications.setIdNotification(notificationTemplates.stream()
+                                                                           .filter(p -> p.getSubject().toLowerCase().equals("status update"))
+                                                                           .findFirst()
+                                                                           .orElse(null));
+
+                jobAppNotifications = atJobAppNotificationsRepository.save(jobAppNotifications);
+            }
+        }
+
         atJobApplications = atJobApplicationsRepository.save(atJobApplications);
         AtJobApplicationsDTO result = atJobApplicationsMapper.toDto(atJobApplications);
         atJobApplicationsSearchRepository.save(atJobApplications);

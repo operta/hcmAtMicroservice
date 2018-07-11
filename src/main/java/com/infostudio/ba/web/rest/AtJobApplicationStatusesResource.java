@@ -93,7 +93,11 @@ public class AtJobApplicationStatusesResource {
         if (atJobApplicationStatusesDTO.getId() == null) {
             return createAtJobApplicationStatuses(atJobApplicationStatusesDTO);
         }
+        AtJobApplicationStatuses oldAtJobApplicationStatuses = atJobApplicationStatusesRepository.findOne(atJobApplicationStatusesDTO.getId());
         AtJobApplicationStatuses atJobApplicationStatuses = atJobApplicationStatusesMapper.toEntity(atJobApplicationStatusesDTO);
+
+
+
         atJobApplicationStatuses = atJobApplicationStatusesRepository.save(atJobApplicationStatuses);
         AtJobApplicationStatusesDTO result = atJobApplicationStatusesMapper.toDto(atJobApplicationStatuses);
         atJobApplicationStatusesSearchRepository.save(atJobApplicationStatuses);
