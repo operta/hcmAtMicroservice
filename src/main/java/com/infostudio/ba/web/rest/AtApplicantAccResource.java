@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtApplicantAcc;
 
 import com.infostudio.ba.repository.AtApplicantAccRepository;
-import com.infostudio.ba.repository.search.AtApplicantAccSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -29,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+
 
 /**
  * REST controller for managing AtApplicantAcc.
@@ -46,12 +45,10 @@ public class AtApplicantAccResource {
 
     private final AtApplicantAccMapper atApplicantAccMapper;
 
-    private final AtApplicantAccSearchRepository atApplicantAccSearchRepository;
 
-    public AtApplicantAccResource(AtApplicantAccRepository atApplicantAccRepository, AtApplicantAccMapper atApplicantAccMapper, AtApplicantAccSearchRepository atApplicantAccSearchRepository) {
+    public AtApplicantAccResource(AtApplicantAccRepository atApplicantAccRepository, AtApplicantAccMapper atApplicantAccMapper) {
         this.atApplicantAccRepository = atApplicantAccRepository;
         this.atApplicantAccMapper = atApplicantAccMapper;
-        this.atApplicantAccSearchRepository = atApplicantAccSearchRepository;
     }
 
     /**
@@ -71,7 +68,6 @@ public class AtApplicantAccResource {
         AtApplicantAcc atApplicantAcc = atApplicantAccMapper.toEntity(atApplicantAccDTO);
         atApplicantAcc = atApplicantAccRepository.save(atApplicantAcc);
         AtApplicantAccDTO result = atApplicantAccMapper.toDto(atApplicantAcc);
-        atApplicantAccSearchRepository.save(atApplicantAcc);
         return ResponseEntity.created(new URI("/api/at-applicant-accs/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +92,6 @@ public class AtApplicantAccResource {
         AtApplicantAcc atApplicantAcc = atApplicantAccMapper.toEntity(atApplicantAccDTO);
         atApplicantAcc = atApplicantAccRepository.save(atApplicantAcc);
         AtApplicantAccDTO result = atApplicantAccMapper.toDto(atApplicantAcc);
-        atApplicantAccSearchRepository.save(atApplicantAcc);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atApplicantAccDTO.getId().toString()))
             .body(result);
@@ -127,7 +122,7 @@ public class AtApplicantAccResource {
     @Timed
     public ResponseEntity<AtApplicantAccDTO> getAtApplicantAcc(@PathVariable Long id) {
         log.debug("REST request to get AtApplicantAcc : {}", id);
-        AtApplicantAcc atApplicantAcc = atApplicantAccRepository.findOne(id);
+        AtApplicantAcc atApplicantAcc = atApplicantAccRepository.findById(id);
         AtApplicantAccDTO atApplicantAccDTO = atApplicantAccMapper.toDto(atApplicantAcc);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantAccDTO));
     }
@@ -152,25 +147,8 @@ public class AtApplicantAccResource {
     public ResponseEntity<Void> deleteAtApplicantAcc(@PathVariable Long id) {
         log.debug("REST request to delete AtApplicantAcc : {}", id);
         atApplicantAccRepository.delete(id);
-        atApplicantAccSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-applicant-accs?query=:query : search for the atApplicantAcc corresponding
-     * to the query.
-     *
-     * @param query the query of the atApplicantAcc search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-applicant-accs")
-    @Timed
-    public ResponseEntity<List<AtApplicantAccDTO>> searchAtApplicantAccs(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtApplicantAccs for query {}", query);
-        Page<AtApplicantAcc> page = atApplicantAccSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-applicant-accs");
-        return new ResponseEntity<>(atApplicantAccMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

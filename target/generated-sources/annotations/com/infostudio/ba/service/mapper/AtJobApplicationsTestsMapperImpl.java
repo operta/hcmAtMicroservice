@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-08-24T10:12:57+0200",
+    date = "2018-09-06T13:49:08+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -61,9 +61,6 @@ public class AtJobApplicationsTestsMapperImpl implements AtJobApplicationsTestsM
             atJobApplicationsTestsDTO.setJobApplicationIdId( id );
         }
         atJobApplicationsTestsDTO.setCreatedBy( atJobApplicationsTests.getCreatedBy() );
-        atJobApplicationsTestsDTO.setCreatedAt( atJobApplicationsTests.getcreatedAt() );
-        atJobApplicationsTestsDTO.setUpdatedBy( atJobApplicationsTests.getupdatedBy() );
-        atJobApplicationsTestsDTO.setUpdatedAt( atJobApplicationsTests.getupdatedAt() );
         atJobApplicationsTestsDTO.setId( atJobApplicationsTests.getId() );
         atJobApplicationsTestsDTO.setScore( atJobApplicationsTests.getScore() );
         atJobApplicationsTestsDTO.setLocationId( atJobApplicationsTests.getLocationId() );
@@ -84,9 +81,6 @@ public class AtJobApplicationsTestsMapperImpl implements AtJobApplicationsTestsM
 
         atJobApplicationsTests.setJobApplicationId( atJobApplicationsMapper.fromId( atJobApplicationsTestsDTO.getJobApplicationIdId() ) );
         atJobApplicationsTests.setCreatedBy( atJobApplicationsTestsDTO.getCreatedBy() );
-        atJobApplicationsTests.setcreatedAt( atJobApplicationsTestsDTO.getCreatedAt() );
-        atJobApplicationsTests.setupdatedBy( atJobApplicationsTestsDTO.getUpdatedBy() );
-        atJobApplicationsTests.setupdatedAt( atJobApplicationsTestsDTO.getUpdatedAt() );
         atJobApplicationsTests.setId( atJobApplicationsTestsDTO.getId() );
         atJobApplicationsTests.setScore( atJobApplicationsTestsDTO.getScore() );
         atJobApplicationsTests.setLocationId( atJobApplicationsTestsDTO.getLocationId() );

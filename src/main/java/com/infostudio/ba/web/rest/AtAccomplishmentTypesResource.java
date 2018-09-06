@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtAccomplishmentTypes;
 
 import com.infostudio.ba.repository.AtAccomplishmentTypesRepository;
-import com.infostudio.ba.repository.search.AtAccomplishmentTypesSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -29,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+
 
 /**
  * REST controller for managing AtAccomplishmentTypes.
@@ -46,12 +45,10 @@ public class AtAccomplishmentTypesResource {
 
     private final AtAccomplishmentTypesMapper atAccomplishmentTypesMapper;
 
-    private final AtAccomplishmentTypesSearchRepository atAccomplishmentTypesSearchRepository;
 
-    public AtAccomplishmentTypesResource(AtAccomplishmentTypesRepository atAccomplishmentTypesRepository, AtAccomplishmentTypesMapper atAccomplishmentTypesMapper, AtAccomplishmentTypesSearchRepository atAccomplishmentTypesSearchRepository) {
+    public AtAccomplishmentTypesResource(AtAccomplishmentTypesRepository atAccomplishmentTypesRepository, AtAccomplishmentTypesMapper atAccomplishmentTypesMapper) {
         this.atAccomplishmentTypesRepository = atAccomplishmentTypesRepository;
         this.atAccomplishmentTypesMapper = atAccomplishmentTypesMapper;
-        this.atAccomplishmentTypesSearchRepository = atAccomplishmentTypesSearchRepository;
     }
 
     /**
@@ -71,7 +68,8 @@ public class AtAccomplishmentTypesResource {
         AtAccomplishmentTypes atAccomplishmentTypes = atAccomplishmentTypesMapper.toEntity(atAccomplishmentTypesDTO);
         atAccomplishmentTypes = atAccomplishmentTypesRepository.save(atAccomplishmentTypes);
         AtAccomplishmentTypesDTO result = atAccomplishmentTypesMapper.toDto(atAccomplishmentTypes);
-        atAccomplishmentTypesSearchRepository.save(atAccomplishmentTypes);
+
+
         return ResponseEntity.created(new URI("/api/at-accomplishment-types/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +94,6 @@ public class AtAccomplishmentTypesResource {
         AtAccomplishmentTypes atAccomplishmentTypes = atAccomplishmentTypesMapper.toEntity(atAccomplishmentTypesDTO);
         atAccomplishmentTypes = atAccomplishmentTypesRepository.save(atAccomplishmentTypes);
         AtAccomplishmentTypesDTO result = atAccomplishmentTypesMapper.toDto(atAccomplishmentTypes);
-        atAccomplishmentTypesSearchRepository.save(atAccomplishmentTypes);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atAccomplishmentTypesDTO.getId().toString()))
             .body(result);
@@ -127,7 +124,7 @@ public class AtAccomplishmentTypesResource {
     @Timed
     public ResponseEntity<AtAccomplishmentTypesDTO> getAtAccomplishmentTypes(@PathVariable Long id) {
         log.debug("REST request to get AtAccomplishmentTypes : {}", id);
-        AtAccomplishmentTypes atAccomplishmentTypes = atAccomplishmentTypesRepository.findOne(id);
+        AtAccomplishmentTypes atAccomplishmentTypes = atAccomplishmentTypesRepository.findById(id);
         AtAccomplishmentTypesDTO atAccomplishmentTypesDTO = atAccomplishmentTypesMapper.toDto(atAccomplishmentTypes);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atAccomplishmentTypesDTO));
     }
@@ -143,25 +140,8 @@ public class AtAccomplishmentTypesResource {
     public ResponseEntity<Void> deleteAtAccomplishmentTypes(@PathVariable Long id) {
         log.debug("REST request to delete AtAccomplishmentTypes : {}", id);
         atAccomplishmentTypesRepository.delete(id);
-        atAccomplishmentTypesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-accomplishment-types?query=:query : search for the atAccomplishmentTypes corresponding
-     * to the query.
-     *
-     * @param query the query of the atAccomplishmentTypes search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-accomplishment-types")
-    @Timed
-    public ResponseEntity<List<AtAccomplishmentTypesDTO>> searchAtAccomplishmentTypes(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtAccomplishmentTypes for query {}", query);
-        Page<AtAccomplishmentTypes> page = atAccomplishmentTypesSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-accomplishment-types");
-        return new ResponseEntity<>(atAccomplishmentTypesMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

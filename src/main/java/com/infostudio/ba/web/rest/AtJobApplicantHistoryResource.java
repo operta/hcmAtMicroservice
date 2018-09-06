@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtJobApplicantHistory;
 
 import com.infostudio.ba.repository.AtJobApplicantHistoryRepository;
-import com.infostudio.ba.repository.search.AtJobApplicantHistorySearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -28,7 +27,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing AtJobApplicantHistory.
@@ -45,12 +43,10 @@ public class AtJobApplicantHistoryResource {
 
     private final AtJobApplicantHistoryMapper atJobApplicantHistoryMapper;
 
-    private final AtJobApplicantHistorySearchRepository atJobApplicantHistorySearchRepository;
 
-    public AtJobApplicantHistoryResource(AtJobApplicantHistoryRepository atJobApplicantHistoryRepository, AtJobApplicantHistoryMapper atJobApplicantHistoryMapper, AtJobApplicantHistorySearchRepository atJobApplicantHistorySearchRepository) {
+    public AtJobApplicantHistoryResource(AtJobApplicantHistoryRepository atJobApplicantHistoryRepository, AtJobApplicantHistoryMapper atJobApplicantHistoryMapper) {
         this.atJobApplicantHistoryRepository = atJobApplicantHistoryRepository;
         this.atJobApplicantHistoryMapper = atJobApplicantHistoryMapper;
-        this.atJobApplicantHistorySearchRepository = atJobApplicantHistorySearchRepository;
     }
 
     /**
@@ -70,7 +66,6 @@ public class AtJobApplicantHistoryResource {
         AtJobApplicantHistory atJobApplicantHistory = atJobApplicantHistoryMapper.toEntity(atJobApplicantHistoryDTO);
         atJobApplicantHistory = atJobApplicantHistoryRepository.save(atJobApplicantHistory);
         AtJobApplicantHistoryDTO result = atJobApplicantHistoryMapper.toDto(atJobApplicantHistory);
-        atJobApplicantHistorySearchRepository.save(atJobApplicantHistory);
         return ResponseEntity.created(new URI("/api/at-job-applicant-histories/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -95,7 +90,6 @@ public class AtJobApplicantHistoryResource {
         AtJobApplicantHistory atJobApplicantHistory = atJobApplicantHistoryMapper.toEntity(atJobApplicantHistoryDTO);
         atJobApplicantHistory = atJobApplicantHistoryRepository.save(atJobApplicantHistory);
         AtJobApplicantHistoryDTO result = atJobApplicantHistoryMapper.toDto(atJobApplicantHistory);
-        atJobApplicantHistorySearchRepository.save(atJobApplicantHistory);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atJobApplicantHistoryDTO.getId().toString()))
             .body(result);
@@ -126,7 +120,7 @@ public class AtJobApplicantHistoryResource {
     @Timed
     public ResponseEntity<AtJobApplicantHistoryDTO> getAtJobApplicantHistory(@PathVariable Long id) {
         log.debug("REST request to get AtJobApplicantHistory : {}", id);
-        AtJobApplicantHistory atJobApplicantHistory = atJobApplicantHistoryRepository.findOne(id);
+        AtJobApplicantHistory atJobApplicantHistory = atJobApplicantHistoryRepository.findById(id);
         AtJobApplicantHistoryDTO atJobApplicantHistoryDTO = atJobApplicantHistoryMapper.toDto(atJobApplicantHistory);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicantHistoryDTO));
     }
@@ -151,25 +145,8 @@ public class AtJobApplicantHistoryResource {
     public ResponseEntity<Void> deleteAtJobApplicantHistory(@PathVariable Long id) {
         log.debug("REST request to delete AtJobApplicantHistory : {}", id);
         atJobApplicantHistoryRepository.delete(id);
-        atJobApplicantHistorySearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-job-applicant-histories?query=:query : search for the atJobApplicantHistory corresponding
-     * to the query.
-     *
-     * @param query the query of the atJobApplicantHistory search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-job-applicant-histories")
-    @Timed
-    public ResponseEntity<List<AtJobApplicantHistoryDTO>> searchAtJobApplicantHistories(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtJobApplicantHistories for query {}", query);
-        Page<AtJobApplicantHistory> page = atJobApplicantHistorySearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-job-applicant-histories");
-        return new ResponseEntity<>(atJobApplicantHistoryMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

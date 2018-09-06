@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtNotificationTemplates;
 
 import com.infostudio.ba.repository.AtNotificationTemplatesRepository;
-import com.infostudio.ba.repository.search.AtNotificationTemplatesSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -29,7 +28,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing AtNotificationTemplates.
@@ -46,12 +44,10 @@ public class AtNotificationTemplatesResource {
 
     private final AtNotificationTemplatesMapper atNotificationTemplatesMapper;
 
-    private final AtNotificationTemplatesSearchRepository atNotificationTemplatesSearchRepository;
 
-    public AtNotificationTemplatesResource(AtNotificationTemplatesRepository atNotificationTemplatesRepository, AtNotificationTemplatesMapper atNotificationTemplatesMapper, AtNotificationTemplatesSearchRepository atNotificationTemplatesSearchRepository) {
+    public AtNotificationTemplatesResource(AtNotificationTemplatesRepository atNotificationTemplatesRepository, AtNotificationTemplatesMapper atNotificationTemplatesMapper) {
         this.atNotificationTemplatesRepository = atNotificationTemplatesRepository;
         this.atNotificationTemplatesMapper = atNotificationTemplatesMapper;
-        this.atNotificationTemplatesSearchRepository = atNotificationTemplatesSearchRepository;
     }
 
     /**
@@ -71,7 +67,6 @@ public class AtNotificationTemplatesResource {
         AtNotificationTemplates atNotificationTemplates = atNotificationTemplatesMapper.toEntity(atNotificationTemplatesDTO);
         atNotificationTemplates = atNotificationTemplatesRepository.save(atNotificationTemplates);
         AtNotificationTemplatesDTO result = atNotificationTemplatesMapper.toDto(atNotificationTemplates);
-        atNotificationTemplatesSearchRepository.save(atNotificationTemplates);
         return ResponseEntity.created(new URI("/api/at-notification-templates/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +91,6 @@ public class AtNotificationTemplatesResource {
         AtNotificationTemplates atNotificationTemplates = atNotificationTemplatesMapper.toEntity(atNotificationTemplatesDTO);
         atNotificationTemplates = atNotificationTemplatesRepository.save(atNotificationTemplates);
         AtNotificationTemplatesDTO result = atNotificationTemplatesMapper.toDto(atNotificationTemplates);
-        atNotificationTemplatesSearchRepository.save(atNotificationTemplates);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atNotificationTemplatesDTO.getId().toString()))
             .body(result);
@@ -127,7 +121,7 @@ public class AtNotificationTemplatesResource {
     @Timed
     public ResponseEntity<AtNotificationTemplatesDTO> getAtNotificationTemplates(@PathVariable Long id) {
         log.debug("REST request to get AtNotificationTemplates : {}", id);
-        AtNotificationTemplates atNotificationTemplates = atNotificationTemplatesRepository.findOne(id);
+        AtNotificationTemplates atNotificationTemplates = atNotificationTemplatesRepository.findById(id);
         AtNotificationTemplatesDTO atNotificationTemplatesDTO = atNotificationTemplatesMapper.toDto(atNotificationTemplates);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atNotificationTemplatesDTO));
     }
@@ -143,25 +137,7 @@ public class AtNotificationTemplatesResource {
     public ResponseEntity<Void> deleteAtNotificationTemplates(@PathVariable Long id) {
         log.debug("REST request to delete AtNotificationTemplates : {}", id);
         atNotificationTemplatesRepository.delete(id);
-        atNotificationTemplatesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * SEARCH  /_search/at-notification-templates?query=:query : search for the atNotificationTemplates corresponding
-     * to the query.
-     *
-     * @param query the query of the atNotificationTemplates search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-notification-templates")
-    @Timed
-    public ResponseEntity<List<AtNotificationTemplatesDTO>> searchAtNotificationTemplates(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtNotificationTemplates for query {}", query);
-        Page<AtNotificationTemplates> page = atNotificationTemplatesSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-notification-templates");
-        return new ResponseEntity<>(atNotificationTemplatesMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
 
 }

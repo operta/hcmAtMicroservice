@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtJobApplicationsTests;
 
 import com.infostudio.ba.repository.AtJobApplicationsTestsRepository;
-import com.infostudio.ba.repository.search.AtJobApplicationsTestsSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -28,7 +27,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing AtJobApplicationsTests.
@@ -45,12 +43,10 @@ public class AtJobApplicationsTestsResource {
 
     private final AtJobApplicationsTestsMapper atJobApplicationsTestsMapper;
 
-    private final AtJobApplicationsTestsSearchRepository atJobApplicationsTestsSearchRepository;
 
-    public AtJobApplicationsTestsResource(AtJobApplicationsTestsRepository atJobApplicationsTestsRepository, AtJobApplicationsTestsMapper atJobApplicationsTestsMapper, AtJobApplicationsTestsSearchRepository atJobApplicationsTestsSearchRepository) {
+    public AtJobApplicationsTestsResource(AtJobApplicationsTestsRepository atJobApplicationsTestsRepository, AtJobApplicationsTestsMapper atJobApplicationsTestsMapper) {
         this.atJobApplicationsTestsRepository = atJobApplicationsTestsRepository;
         this.atJobApplicationsTestsMapper = atJobApplicationsTestsMapper;
-        this.atJobApplicationsTestsSearchRepository = atJobApplicationsTestsSearchRepository;
     }
 
     /**
@@ -70,7 +66,6 @@ public class AtJobApplicationsTestsResource {
         AtJobApplicationsTests atJobApplicationsTests = atJobApplicationsTestsMapper.toEntity(atJobApplicationsTestsDTO);
         atJobApplicationsTests = atJobApplicationsTestsRepository.save(atJobApplicationsTests);
         AtJobApplicationsTestsDTO result = atJobApplicationsTestsMapper.toDto(atJobApplicationsTests);
-        atJobApplicationsTestsSearchRepository.save(atJobApplicationsTests);
         return ResponseEntity.created(new URI("/api/at-job-applications-tests/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -95,7 +90,6 @@ public class AtJobApplicationsTestsResource {
         AtJobApplicationsTests atJobApplicationsTests = atJobApplicationsTestsMapper.toEntity(atJobApplicationsTestsDTO);
         atJobApplicationsTests = atJobApplicationsTestsRepository.save(atJobApplicationsTests);
         AtJobApplicationsTestsDTO result = atJobApplicationsTestsMapper.toDto(atJobApplicationsTests);
-        atJobApplicationsTestsSearchRepository.save(atJobApplicationsTests);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atJobApplicationsTestsDTO.getId().toString()))
             .body(result);
@@ -126,7 +120,7 @@ public class AtJobApplicationsTestsResource {
     @Timed
     public ResponseEntity<AtJobApplicationsTestsDTO> getAtJobApplicationsTests(@PathVariable Long id) {
         log.debug("REST request to get AtJobApplicationsTests : {}", id);
-        AtJobApplicationsTests atJobApplicationsTests = atJobApplicationsTestsRepository.findOne(id);
+        AtJobApplicationsTests atJobApplicationsTests = atJobApplicationsTestsRepository.findById(id);
         AtJobApplicationsTestsDTO atJobApplicationsTestsDTO = atJobApplicationsTestsMapper.toDto(atJobApplicationsTests);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJobApplicationsTestsDTO));
     }
@@ -151,25 +145,7 @@ public class AtJobApplicationsTestsResource {
     public ResponseEntity<Void> deleteAtJobApplicationsTests(@PathVariable Long id) {
         log.debug("REST request to delete AtJobApplicationsTests : {}", id);
         atJobApplicationsTestsRepository.delete(id);
-        atJobApplicationsTestsSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * SEARCH  /_search/at-job-applications-tests?query=:query : search for the atJobApplicationsTests corresponding
-     * to the query.
-     *
-     * @param query the query of the atJobApplicationsTests search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-job-applications-tests")
-    @Timed
-    public ResponseEntity<List<AtJobApplicationsTestsDTO>> searchAtJobApplicationsTests(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtJobApplicationsTests for query {}", query);
-        Page<AtJobApplicationsTests> page = atJobApplicationsTestsSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-job-applications-tests");
-        return new ResponseEntity<>(atJobApplicationsTestsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
 
 }

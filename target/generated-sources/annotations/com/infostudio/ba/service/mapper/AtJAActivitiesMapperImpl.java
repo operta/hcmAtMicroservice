@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-08-24T10:12:57+0200",
+    date = "2018-09-06T13:49:09+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -83,9 +83,6 @@ public class AtJAActivitiesMapperImpl implements AtJAActivitiesMapper {
             atJAActivitiesDTO.setIdStatusId( id2 );
         }
         atJAActivitiesDTO.setCreatedBy( atJAActivities.getCreatedBy() );
-        atJAActivitiesDTO.setCreatedAt( atJAActivities.getcreatedAt() );
-        atJAActivitiesDTO.setUpdatedBy( atJAActivities.getupdatedBy() );
-        atJAActivitiesDTO.setUpdatedAt( atJAActivities.getupdatedAt() );
         atJAActivitiesDTO.setId( atJAActivities.getId() );
         atJAActivitiesDTO.setGrade( atJAActivities.getGrade() );
         atJAActivitiesDTO.setReview( atJAActivities.getReview() );
@@ -106,9 +103,6 @@ public class AtJAActivitiesMapperImpl implements AtJAActivitiesMapper {
         atJAActivities.setIdJobApplication( atJobApplicationsMapper.fromId( atJAActivitiesDTO.getIdJobApplicationId() ) );
         atJAActivities.setIdActivity( atActivitiesMapper.fromId( atJAActivitiesDTO.getIdActivityId() ) );
         atJAActivities.setCreatedBy( atJAActivitiesDTO.getCreatedBy() );
-        atJAActivities.setcreatedAt( atJAActivitiesDTO.getCreatedAt() );
-        atJAActivities.setupdatedBy( atJAActivitiesDTO.getUpdatedBy() );
-        atJAActivities.setupdatedAt( atJAActivitiesDTO.getUpdatedAt() );
         atJAActivities.setId( atJAActivitiesDTO.getId() );
         atJAActivities.setGrade( atJAActivitiesDTO.getGrade() );
         atJAActivities.setReview( atJAActivitiesDTO.getReview() );

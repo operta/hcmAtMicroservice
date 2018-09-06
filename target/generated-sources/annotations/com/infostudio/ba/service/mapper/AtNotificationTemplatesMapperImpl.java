@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-08-24T10:12:57+0200",
+    date = "2018-09-06T13:49:09+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -24,9 +24,6 @@ public class AtNotificationTemplatesMapperImpl implements AtNotificationTemplate
         AtNotificationTemplates atNotificationTemplates = new AtNotificationTemplates();
 
         atNotificationTemplates.setCreatedBy( dto.getCreatedBy() );
-        atNotificationTemplates.setcreatedAt( dto.getCreatedAt() );
-        atNotificationTemplates.setupdatedBy( dto.getUpdatedBy() );
-        atNotificationTemplates.setupdatedAt( dto.getUpdatedAt() );
         atNotificationTemplates.setId( dto.getId() );
         atNotificationTemplates.setCode( dto.getCode() );
         atNotificationTemplates.setSubject( dto.getSubject() );
@@ -44,9 +41,6 @@ public class AtNotificationTemplatesMapperImpl implements AtNotificationTemplate
         AtNotificationTemplatesDTO atNotificationTemplatesDTO = new AtNotificationTemplatesDTO();
 
         atNotificationTemplatesDTO.setCreatedBy( entity.getCreatedBy() );
-        atNotificationTemplatesDTO.setCreatedAt( entity.getcreatedAt() );
-        atNotificationTemplatesDTO.setUpdatedBy( entity.getupdatedBy() );
-        atNotificationTemplatesDTO.setUpdatedAt( entity.getupdatedAt() );
         atNotificationTemplatesDTO.setId( entity.getId() );
         atNotificationTemplatesDTO.setCode( entity.getCode() );
         atNotificationTemplatesDTO.setSubject( entity.getSubject() );

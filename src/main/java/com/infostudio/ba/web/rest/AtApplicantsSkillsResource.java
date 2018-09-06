@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtApplicantsSkills;
 
 import com.infostudio.ba.repository.AtApplicantsSkillsRepository;
-import com.infostudio.ba.repository.search.AtApplicantsSkillsSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -28,7 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+
 
 /**
  * REST controller for managing AtApplicantsSkills.
@@ -45,12 +44,10 @@ public class AtApplicantsSkillsResource {
 
     private final AtApplicantsSkillsMapper atApplicantsSkillsMapper;
 
-    private final AtApplicantsSkillsSearchRepository atApplicantsSkillsSearchRepository;
 
-    public AtApplicantsSkillsResource(AtApplicantsSkillsRepository atApplicantsSkillsRepository, AtApplicantsSkillsMapper atApplicantsSkillsMapper, AtApplicantsSkillsSearchRepository atApplicantsSkillsSearchRepository) {
+    public AtApplicantsSkillsResource(AtApplicantsSkillsRepository atApplicantsSkillsRepository, AtApplicantsSkillsMapper atApplicantsSkillsMapper) {
         this.atApplicantsSkillsRepository = atApplicantsSkillsRepository;
         this.atApplicantsSkillsMapper = atApplicantsSkillsMapper;
-        this.atApplicantsSkillsSearchRepository = atApplicantsSkillsSearchRepository;
     }
 
     /**
@@ -70,7 +67,6 @@ public class AtApplicantsSkillsResource {
         AtApplicantsSkills atApplicantsSkills = atApplicantsSkillsMapper.toEntity(atApplicantsSkillsDTO);
         atApplicantsSkills = atApplicantsSkillsRepository.save(atApplicantsSkills);
         AtApplicantsSkillsDTO result = atApplicantsSkillsMapper.toDto(atApplicantsSkills);
-        atApplicantsSkillsSearchRepository.save(atApplicantsSkills);
         return ResponseEntity.created(new URI("/api/at-applicants-skills/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -95,7 +91,6 @@ public class AtApplicantsSkillsResource {
         AtApplicantsSkills atApplicantsSkills = atApplicantsSkillsMapper.toEntity(atApplicantsSkillsDTO);
         atApplicantsSkills = atApplicantsSkillsRepository.save(atApplicantsSkills);
         AtApplicantsSkillsDTO result = atApplicantsSkillsMapper.toDto(atApplicantsSkills);
-        atApplicantsSkillsSearchRepository.save(atApplicantsSkills);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atApplicantsSkillsDTO.getId().toString()))
             .body(result);
@@ -126,7 +121,7 @@ public class AtApplicantsSkillsResource {
     @Timed
     public ResponseEntity<AtApplicantsSkillsDTO> getAtApplicantsSkills(@PathVariable Long id) {
         log.debug("REST request to get AtApplicantsSkills : {}", id);
-        AtApplicantsSkills atApplicantsSkills = atApplicantsSkillsRepository.findOne(id);
+        AtApplicantsSkills atApplicantsSkills = atApplicantsSkillsRepository.findById(id);
         AtApplicantsSkillsDTO atApplicantsSkillsDTO = atApplicantsSkillsMapper.toDto(atApplicantsSkills);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsSkillsDTO));
     }
@@ -151,25 +146,8 @@ public class AtApplicantsSkillsResource {
     public ResponseEntity<Void> deleteAtApplicantsSkills(@PathVariable Long id) {
         log.debug("REST request to delete AtApplicantsSkills : {}", id);
         atApplicantsSkillsRepository.delete(id);
-        atApplicantsSkillsSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-applicants-skills?query=:query : search for the atApplicantsSkills corresponding
-     * to the query.
-     *
-     * @param query the query of the atApplicantsSkills search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-applicants-skills")
-    @Timed
-    public ResponseEntity<List<AtApplicantsSkillsDTO>> searchAtApplicantsSkills(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtApplicantsSkills for query {}", query);
-        Page<AtApplicantsSkills> page = atApplicantsSkillsSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-applicants-skills");
-        return new ResponseEntity<>(atApplicantsSkillsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

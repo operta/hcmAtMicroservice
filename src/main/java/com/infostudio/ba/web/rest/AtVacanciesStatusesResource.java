@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtVacanciesStatuses;
 
 import com.infostudio.ba.repository.AtVacanciesStatusesRepository;
-import com.infostudio.ba.repository.search.AtVacanciesStatusesSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -28,7 +27,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing AtVacanciesStatuses.
@@ -45,12 +43,10 @@ public class AtVacanciesStatusesResource {
 
     private final AtVacanciesStatusesMapper atVacanciesStatusesMapper;
 
-    private final AtVacanciesStatusesSearchRepository atVacanciesStatusesSearchRepository;
 
-    public AtVacanciesStatusesResource(AtVacanciesStatusesRepository atVacanciesStatusesRepository, AtVacanciesStatusesMapper atVacanciesStatusesMapper, AtVacanciesStatusesSearchRepository atVacanciesStatusesSearchRepository) {
+    public AtVacanciesStatusesResource(AtVacanciesStatusesRepository atVacanciesStatusesRepository, AtVacanciesStatusesMapper atVacanciesStatusesMapper) {
         this.atVacanciesStatusesRepository = atVacanciesStatusesRepository;
         this.atVacanciesStatusesMapper = atVacanciesStatusesMapper;
-        this.atVacanciesStatusesSearchRepository = atVacanciesStatusesSearchRepository;
     }
 
     /**
@@ -70,7 +66,7 @@ public class AtVacanciesStatusesResource {
         AtVacanciesStatuses atVacanciesStatuses = atVacanciesStatusesMapper.toEntity(atVacanciesStatusesDTO);
         atVacanciesStatuses = atVacanciesStatusesRepository.save(atVacanciesStatuses);
         AtVacanciesStatusesDTO result = atVacanciesStatusesMapper.toDto(atVacanciesStatuses);
-        atVacanciesStatusesSearchRepository.save(atVacanciesStatuses);
+
         return ResponseEntity.created(new URI("/api/at-vacancies-statuses/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -95,7 +91,6 @@ public class AtVacanciesStatusesResource {
         AtVacanciesStatuses atVacanciesStatuses = atVacanciesStatusesMapper.toEntity(atVacanciesStatusesDTO);
         atVacanciesStatuses = atVacanciesStatusesRepository.save(atVacanciesStatuses);
         AtVacanciesStatusesDTO result = atVacanciesStatusesMapper.toDto(atVacanciesStatuses);
-        atVacanciesStatusesSearchRepository.save(atVacanciesStatuses);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atVacanciesStatusesDTO.getId().toString()))
             .body(result);
@@ -126,7 +121,7 @@ public class AtVacanciesStatusesResource {
     @Timed
     public ResponseEntity<AtVacanciesStatusesDTO> getAtVacanciesStatuses(@PathVariable Long id) {
         log.debug("REST request to get AtVacanciesStatuses : {}", id);
-        AtVacanciesStatuses atVacanciesStatuses = atVacanciesStatusesRepository.findOne(id);
+        AtVacanciesStatuses atVacanciesStatuses = atVacanciesStatusesRepository.findById(id);
         AtVacanciesStatusesDTO atVacanciesStatusesDTO = atVacanciesStatusesMapper.toDto(atVacanciesStatuses);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atVacanciesStatusesDTO));
     }
@@ -142,25 +137,7 @@ public class AtVacanciesStatusesResource {
     public ResponseEntity<Void> deleteAtVacanciesStatuses(@PathVariable Long id) {
         log.debug("REST request to delete AtVacanciesStatuses : {}", id);
         atVacanciesStatusesRepository.delete(id);
-        atVacanciesStatusesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * SEARCH  /_search/at-vacancies-statuses?query=:query : search for the atVacanciesStatuses corresponding
-     * to the query.
-     *
-     * @param query the query of the atVacanciesStatuses search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-vacancies-statuses")
-    @Timed
-    public ResponseEntity<List<AtVacanciesStatusesDTO>> searchAtVacanciesStatuses(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtVacanciesStatuses for query {}", query);
-        Page<AtVacanciesStatuses> page = atVacanciesStatusesSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-vacancies-statuses");
-        return new ResponseEntity<>(atVacanciesStatusesMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
 
 }

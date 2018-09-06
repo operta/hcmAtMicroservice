@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtActivities;
 
 import com.infostudio.ba.repository.AtActivitiesRepository;
-import com.infostudio.ba.repository.search.AtActivitiesSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -29,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+
 
 /**
  * REST controller for managing AtActivities.
@@ -46,12 +45,10 @@ public class AtActivitiesResource {
 
     private final AtActivitiesMapper atActivitiesMapper;
 
-    private final AtActivitiesSearchRepository atActivitiesSearchRepository;
 
-    public AtActivitiesResource(AtActivitiesRepository atActivitiesRepository, AtActivitiesMapper atActivitiesMapper, AtActivitiesSearchRepository atActivitiesSearchRepository) {
+    public AtActivitiesResource(AtActivitiesRepository atActivitiesRepository, AtActivitiesMapper atActivitiesMapper) {
         this.atActivitiesRepository = atActivitiesRepository;
         this.atActivitiesMapper = atActivitiesMapper;
-        this.atActivitiesSearchRepository = atActivitiesSearchRepository;
     }
 
     /**
@@ -71,7 +68,7 @@ public class AtActivitiesResource {
         AtActivities atActivities = atActivitiesMapper.toEntity(atActivitiesDTO);
         atActivities = atActivitiesRepository.save(atActivities);
         AtActivitiesDTO result = atActivitiesMapper.toDto(atActivities);
-        atActivitiesSearchRepository.save(atActivities);
+
         return ResponseEntity.created(new URI("/api/at-activities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +93,6 @@ public class AtActivitiesResource {
         AtActivities atActivities = atActivitiesMapper.toEntity(atActivitiesDTO);
         atActivities = atActivitiesRepository.save(atActivities);
         AtActivitiesDTO result = atActivitiesMapper.toDto(atActivities);
-        atActivitiesSearchRepository.save(atActivities);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atActivitiesDTO.getId().toString()))
             .body(result);
@@ -127,7 +123,7 @@ public class AtActivitiesResource {
     @Timed
     public ResponseEntity<AtActivitiesDTO> getAtActivities(@PathVariable Long id) {
         log.debug("REST request to get AtActivities : {}", id);
-        AtActivities atActivities = atActivitiesRepository.findOne(id);
+        AtActivities atActivities = atActivitiesRepository.findById(id);
         AtActivitiesDTO atActivitiesDTO = atActivitiesMapper.toDto(atActivities);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atActivitiesDTO));
     }
@@ -143,25 +139,7 @@ public class AtActivitiesResource {
     public ResponseEntity<Void> deleteAtActivities(@PathVariable Long id) {
         log.debug("REST request to delete AtActivities : {}", id);
         atActivitiesRepository.delete(id);
-        atActivitiesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * SEARCH  /_search/at-activities?query=:query : search for the atActivities corresponding
-     * to the query.
-     *
-     * @param query the query of the atActivities search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-activities")
-    @Timed
-    public ResponseEntity<List<AtActivitiesDTO>> searchAtActivities(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtActivities for query {}", query);
-        Page<AtActivities> page = atActivitiesSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-activities");
-        return new ResponseEntity<>(atActivitiesMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
 
 }

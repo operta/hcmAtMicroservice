@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-08-24T10:12:57+0200",
+    date = "2018-09-06T13:49:09+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -76,9 +76,6 @@ public class AtApplicantAccMapperImpl implements AtApplicantAccMapper {
             atApplicantAccDTO.setIdApplicantId( id1 );
         }
         atApplicantAccDTO.setCreatedBy( atApplicantAcc.getCreatedBy() );
-        atApplicantAccDTO.setCreatedAt( atApplicantAcc.getcreatedAt() );
-        atApplicantAccDTO.setUpdatedBy( atApplicantAcc.getupdatedBy() );
-        atApplicantAccDTO.setUpdatedAt( atApplicantAcc.getupdatedAt() );
         atApplicantAccDTO.setId( atApplicantAcc.getId() );
         atApplicantAccDTO.setTitle( atApplicantAcc.getTitle() );
         atApplicantAccDTO.setDescription( atApplicantAcc.getDescription() );
@@ -107,9 +104,6 @@ public class AtApplicantAccMapperImpl implements AtApplicantAccMapper {
         atApplicantAcc.setIdAccomplishmentType( atAccomplishmentTypesMapper.fromId( atApplicantAccDTO.getIdAccomplishmentTypeId() ) );
         atApplicantAcc.setIdApplicant( atApplicantsMapper.fromId( atApplicantAccDTO.getIdApplicantId() ) );
         atApplicantAcc.setCreatedBy( atApplicantAccDTO.getCreatedBy() );
-        atApplicantAcc.setcreatedAt( atApplicantAccDTO.getCreatedAt() );
-        atApplicantAcc.setupdatedBy( atApplicantAccDTO.getUpdatedBy() );
-        atApplicantAcc.setupdatedAt( atApplicantAccDTO.getUpdatedAt() );
         atApplicantAcc.setId( atApplicantAccDTO.getId() );
         atApplicantAcc.setTitle( atApplicantAccDTO.getTitle() );
         atApplicantAcc.setDescription( atApplicantAccDTO.getDescription() );

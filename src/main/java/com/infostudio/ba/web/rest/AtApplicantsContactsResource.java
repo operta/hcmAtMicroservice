@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtApplicantsContacts;
 
 import com.infostudio.ba.repository.AtApplicantsContactsRepository;
-import com.infostudio.ba.repository.search.AtApplicantsContactsSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -29,7 +28,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+
 
 /**
  * REST controller for managing AtApplicantsContacts.
@@ -46,12 +45,10 @@ public class AtApplicantsContactsResource {
 
     private final AtApplicantsContactsMapper atApplicantsContactsMapper;
 
-    private final AtApplicantsContactsSearchRepository atApplicantsContactsSearchRepository;
 
-    public AtApplicantsContactsResource(AtApplicantsContactsRepository atApplicantsContactsRepository, AtApplicantsContactsMapper atApplicantsContactsMapper, AtApplicantsContactsSearchRepository atApplicantsContactsSearchRepository) {
+    public AtApplicantsContactsResource(AtApplicantsContactsRepository atApplicantsContactsRepository, AtApplicantsContactsMapper atApplicantsContactsMapper) {
         this.atApplicantsContactsRepository = atApplicantsContactsRepository;
         this.atApplicantsContactsMapper = atApplicantsContactsMapper;
-        this.atApplicantsContactsSearchRepository = atApplicantsContactsSearchRepository;
     }
 
     /**
@@ -71,7 +68,6 @@ public class AtApplicantsContactsResource {
         AtApplicantsContacts atApplicantsContacts = atApplicantsContactsMapper.toEntity(atApplicantsContactsDTO);
         atApplicantsContacts = atApplicantsContactsRepository.save(atApplicantsContacts);
         AtApplicantsContactsDTO result = atApplicantsContactsMapper.toDto(atApplicantsContacts);
-        atApplicantsContactsSearchRepository.save(atApplicantsContacts);
         return ResponseEntity.created(new URI("/api/at-applicants-contacts/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +92,6 @@ public class AtApplicantsContactsResource {
         AtApplicantsContacts atApplicantsContacts = atApplicantsContactsMapper.toEntity(atApplicantsContactsDTO);
         atApplicantsContacts = atApplicantsContactsRepository.save(atApplicantsContacts);
         AtApplicantsContactsDTO result = atApplicantsContactsMapper.toDto(atApplicantsContacts);
-        atApplicantsContactsSearchRepository.save(atApplicantsContacts);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atApplicantsContactsDTO.getId().toString()))
             .body(result);
@@ -127,7 +122,7 @@ public class AtApplicantsContactsResource {
     @Timed
     public ResponseEntity<AtApplicantsContactsDTO> getAtApplicantsContacts(@PathVariable Long id) {
         log.debug("REST request to get AtApplicantsContacts : {}", id);
-        AtApplicantsContacts atApplicantsContacts = atApplicantsContactsRepository.findOne(id);
+        AtApplicantsContacts atApplicantsContacts = atApplicantsContactsRepository.findById(id);
         AtApplicantsContactsDTO atApplicantsContactsDTO = atApplicantsContactsMapper.toDto(atApplicantsContacts);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsContactsDTO));
     }
@@ -152,25 +147,8 @@ public class AtApplicantsContactsResource {
     public ResponseEntity<Void> deleteAtApplicantsContacts(@PathVariable Long id) {
         log.debug("REST request to delete AtApplicantsContacts : {}", id);
         atApplicantsContactsRepository.delete(id);
-        atApplicantsContactsSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-applicants-contacts?query=:query : search for the atApplicantsContacts corresponding
-     * to the query.
-     *
-     * @param query the query of the atApplicantsContacts search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-applicants-contacts")
-    @Timed
-    public ResponseEntity<List<AtApplicantsContactsDTO>> searchAtApplicantsContacts(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtApplicantsContacts for query {}", query);
-        Page<AtApplicantsContacts> page = atApplicantsContactsSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-applicants-contacts");
-        return new ResponseEntity<>(atApplicantsContactsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

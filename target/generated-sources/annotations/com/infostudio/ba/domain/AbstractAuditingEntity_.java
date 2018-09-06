@@ -9,10 +9,10 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(AbstractAuditingEntity.class)
 public abstract class AbstractAuditingEntity_ {
 
-	public static volatile SingularAttribute<AbstractAuditingEntity, Instant> createdAt;
-	public static volatile SingularAttribute<AbstractAuditingEntity, String> updatedBy;
+	public static volatile SingularAttribute<AbstractAuditingEntity, Instant> createdDate;
 	public static volatile SingularAttribute<AbstractAuditingEntity, String> createdBy;
-	public static volatile SingularAttribute<AbstractAuditingEntity, Instant> updatedAt;
+	public static volatile SingularAttribute<AbstractAuditingEntity, Instant> lastModifiedDate;
+	public static volatile SingularAttribute<AbstractAuditingEntity, String> lastModifiedBy;
 
 }
 

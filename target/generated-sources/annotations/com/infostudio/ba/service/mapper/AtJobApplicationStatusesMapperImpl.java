@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-08-24T10:12:58+0200",
+    date = "2018-09-06T13:49:09+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -24,9 +24,6 @@ public class AtJobApplicationStatusesMapperImpl implements AtJobApplicationStatu
         AtJobApplicationStatuses atJobApplicationStatuses = new AtJobApplicationStatuses();
 
         atJobApplicationStatuses.setCreatedBy( dto.getCreatedBy() );
-        atJobApplicationStatuses.setcreatedAt( dto.getCreatedAt() );
-        atJobApplicationStatuses.setupdatedBy( dto.getUpdatedBy() );
-        atJobApplicationStatuses.setupdatedAt( dto.getUpdatedAt() );
         atJobApplicationStatuses.setId( dto.getId() );
         atJobApplicationStatuses.setCode( dto.getCode() );
         atJobApplicationStatuses.setName( dto.getName() );
@@ -44,9 +41,6 @@ public class AtJobApplicationStatusesMapperImpl implements AtJobApplicationStatu
         AtJobApplicationStatusesDTO atJobApplicationStatusesDTO = new AtJobApplicationStatusesDTO();
 
         atJobApplicationStatusesDTO.setCreatedBy( entity.getCreatedBy() );
-        atJobApplicationStatusesDTO.setCreatedAt( entity.getcreatedAt() );
-        atJobApplicationStatusesDTO.setUpdatedBy( entity.getupdatedBy() );
-        atJobApplicationStatusesDTO.setUpdatedAt( entity.getupdatedAt() );
         atJobApplicationStatusesDTO.setId( entity.getId() );
         atJobApplicationStatusesDTO.setCode( entity.getCode() );
         atJobApplicationStatusesDTO.setName( entity.getName() );

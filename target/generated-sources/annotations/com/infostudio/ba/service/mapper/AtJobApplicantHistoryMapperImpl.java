@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-08-24T10:12:57+0200",
+    date = "2018-09-06T13:49:09+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -80,9 +80,6 @@ public class AtJobApplicantHistoryMapperImpl implements AtJobApplicantHistoryMap
             atJobApplicantHistoryDTO.setIdStatusToId( id2 );
         }
         atJobApplicantHistoryDTO.setCreatedBy( atJobApplicantHistory.getCreatedBy() );
-        atJobApplicantHistoryDTO.setCreatedAt( atJobApplicantHistory.getcreatedAt() );
-        atJobApplicantHistoryDTO.setUpdatedBy( atJobApplicantHistory.getupdatedBy() );
-        atJobApplicantHistoryDTO.setUpdatedAt( atJobApplicantHistory.getupdatedAt() );
         atJobApplicantHistoryDTO.setId( atJobApplicantHistory.getId() );
 
         return atJobApplicantHistoryDTO;
@@ -100,9 +97,6 @@ public class AtJobApplicantHistoryMapperImpl implements AtJobApplicantHistoryMap
         atJobApplicantHistory.setIdJobApplication( atJobApplicationsMapper.fromId( atJobApplicantHistoryDTO.getIdJobApplicationId() ) );
         atJobApplicantHistory.setIdStatusTo( atJobApplicationStatusesMapper.fromId( atJobApplicantHistoryDTO.getIdStatusToId() ) );
         atJobApplicantHistory.setCreatedBy( atJobApplicantHistoryDTO.getCreatedBy() );
-        atJobApplicantHistory.setcreatedAt( atJobApplicantHistoryDTO.getCreatedAt() );
-        atJobApplicantHistory.setupdatedBy( atJobApplicantHistoryDTO.getUpdatedBy() );
-        atJobApplicantHistory.setupdatedAt( atJobApplicantHistoryDTO.getUpdatedAt() );
         atJobApplicantHistory.setId( atJobApplicantHistoryDTO.getId() );
 
         return atJobApplicantHistory;

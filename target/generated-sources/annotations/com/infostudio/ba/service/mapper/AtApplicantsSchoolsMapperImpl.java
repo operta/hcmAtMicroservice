@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-08-24T10:12:57+0200",
+    date = "2018-09-06T13:49:09+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -65,9 +65,6 @@ public class AtApplicantsSchoolsMapperImpl implements AtApplicantsSchoolsMapper 
             atApplicantsSchoolsDTO.setIdApplicantId( id );
         }
         atApplicantsSchoolsDTO.setCreatedBy( atApplicantsSchools.getCreatedBy() );
-        atApplicantsSchoolsDTO.setCreatedAt( atApplicantsSchools.getcreatedAt() );
-        atApplicantsSchoolsDTO.setUpdatedBy( atApplicantsSchools.getupdatedBy() );
-        atApplicantsSchoolsDTO.setUpdatedAt( atApplicantsSchools.getupdatedAt() );
         atApplicantsSchoolsDTO.setId( atApplicantsSchools.getId() );
         atApplicantsSchoolsDTO.setSchool( atApplicantsSchools.getSchool() );
         atApplicantsSchoolsDTO.setDateFrom( atApplicantsSchools.getDateFrom() );
@@ -93,9 +90,6 @@ public class AtApplicantsSchoolsMapperImpl implements AtApplicantsSchoolsMapper 
 
         atApplicantsSchools.setIdApplicant( atApplicantsMapper.fromId( atApplicantsSchoolsDTO.getIdApplicantId() ) );
         atApplicantsSchools.setCreatedBy( atApplicantsSchoolsDTO.getCreatedBy() );
-        atApplicantsSchools.setcreatedAt( atApplicantsSchoolsDTO.getCreatedAt() );
-        atApplicantsSchools.setupdatedBy( atApplicantsSchoolsDTO.getUpdatedBy() );
-        atApplicantsSchools.setupdatedAt( atApplicantsSchoolsDTO.getUpdatedAt() );
         atApplicantsSchools.setId( atApplicantsSchoolsDTO.getId() );
         atApplicantsSchools.setSchool( atApplicantsSchoolsDTO.getSchool() );
         atApplicantsSchools.setDateFrom( atApplicantsSchoolsDTO.getDateFrom() );

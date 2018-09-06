@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtJAActivities;
 
 import com.infostudio.ba.repository.AtJAActivitiesRepository;
-import com.infostudio.ba.repository.search.AtJAActivitiesSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -29,7 +28,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing AtJAActivities.
@@ -46,12 +44,10 @@ public class AtJAActivitiesResource {
 
     private final AtJAActivitiesMapper atJAActivitiesMapper;
 
-    private final AtJAActivitiesSearchRepository atJAActivitiesSearchRepository;
 
-    public AtJAActivitiesResource(AtJAActivitiesRepository atJAActivitiesRepository, AtJAActivitiesMapper atJAActivitiesMapper, AtJAActivitiesSearchRepository atJAActivitiesSearchRepository) {
+    public AtJAActivitiesResource(AtJAActivitiesRepository atJAActivitiesRepository, AtJAActivitiesMapper atJAActivitiesMapper) {
         this.atJAActivitiesRepository = atJAActivitiesRepository;
         this.atJAActivitiesMapper = atJAActivitiesMapper;
-        this.atJAActivitiesSearchRepository = atJAActivitiesSearchRepository;
     }
 
     /**
@@ -71,7 +67,6 @@ public class AtJAActivitiesResource {
         AtJAActivities atJAActivities = atJAActivitiesMapper.toEntity(atJAActivitiesDTO);
         atJAActivities = atJAActivitiesRepository.save(atJAActivities);
         AtJAActivitiesDTO result = atJAActivitiesMapper.toDto(atJAActivities);
-        atJAActivitiesSearchRepository.save(atJAActivities);
         return ResponseEntity.created(new URI("/api/at-ja-activities/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +91,6 @@ public class AtJAActivitiesResource {
         AtJAActivities atJAActivities = atJAActivitiesMapper.toEntity(atJAActivitiesDTO);
         atJAActivities = atJAActivitiesRepository.save(atJAActivities);
         AtJAActivitiesDTO result = atJAActivitiesMapper.toDto(atJAActivities);
-        atJAActivitiesSearchRepository.save(atJAActivities);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atJAActivitiesDTO.getId().toString()))
             .body(result);
@@ -127,7 +121,7 @@ public class AtJAActivitiesResource {
     @Timed
     public ResponseEntity<AtJAActivitiesDTO> getAtJAActivities(@PathVariable Long id) {
         log.debug("REST request to get AtJAActivities : {}", id);
-        AtJAActivities atJAActivities = atJAActivitiesRepository.findOne(id);
+        AtJAActivities atJAActivities = atJAActivitiesRepository.findById(id);
         AtJAActivitiesDTO atJAActivitiesDTO = atJAActivitiesMapper.toDto(atJAActivities);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atJAActivitiesDTO));
     }
@@ -143,25 +137,8 @@ public class AtJAActivitiesResource {
     public ResponseEntity<Void> deleteAtJAActivities(@PathVariable Long id) {
         log.debug("REST request to delete AtJAActivities : {}", id);
         atJAActivitiesRepository.delete(id);
-        atJAActivitiesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-ja-activities?query=:query : search for the atJAActivities corresponding
-     * to the query.
-     *
-     * @param query the query of the atJAActivities search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-ja-activities")
-    @Timed
-    public ResponseEntity<List<AtJAActivitiesDTO>> searchAtJAActivities(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtJAActivities for query {}", query);
-        Page<AtJAActivities> page = atJAActivitiesSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-ja-activities");
-        return new ResponseEntity<>(atJAActivitiesMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

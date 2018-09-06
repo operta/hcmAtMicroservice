@@ -4,7 +4,6 @@ import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtApplicantsExperience;
 
 import com.infostudio.ba.repository.AtApplicantsExperienceRepository;
-import com.infostudio.ba.repository.search.AtApplicantsExperienceSearchRepository;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
@@ -26,7 +25,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing AtApplicantsExperience.
@@ -41,11 +39,9 @@ public class AtApplicantsExperienceResource {
 
     private final AtApplicantsExperienceRepository atApplicantsExperienceRepository;
 
-    private final AtApplicantsExperienceSearchRepository atApplicantsExperienceSearchRepository;
 
-    public AtApplicantsExperienceResource(AtApplicantsExperienceRepository atApplicantsExperienceRepository, AtApplicantsExperienceSearchRepository atApplicantsExperienceSearchRepository) {
+    public AtApplicantsExperienceResource(AtApplicantsExperienceRepository atApplicantsExperienceRepository) {
         this.atApplicantsExperienceRepository = atApplicantsExperienceRepository;
-        this.atApplicantsExperienceSearchRepository = atApplicantsExperienceSearchRepository;
     }
 
     /**
@@ -63,7 +59,6 @@ public class AtApplicantsExperienceResource {
             throw new BadRequestAlertException("A new atApplicantsExperience cannot already have an ID", ENTITY_NAME, "idexists");
         }
         AtApplicantsExperience result = atApplicantsExperienceRepository.save(atApplicantsExperience);
-        atApplicantsExperienceSearchRepository.save(result);
         return ResponseEntity.created(new URI("/api/at-applicants-experiences/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -86,7 +81,6 @@ public class AtApplicantsExperienceResource {
             return createAtApplicantsExperience(atApplicantsExperience);
         }
         AtApplicantsExperience result = atApplicantsExperienceRepository.save(atApplicantsExperience);
-        atApplicantsExperienceSearchRepository.save(result);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atApplicantsExperience.getId().toString()))
             .body(result);
@@ -117,7 +111,7 @@ public class AtApplicantsExperienceResource {
     @Timed
     public ResponseEntity<AtApplicantsExperience> getAtApplicantsExperience(@PathVariable Long id) {
         log.debug("REST request to get AtApplicantsExperience : {}", id);
-        AtApplicantsExperience atApplicantsExperience = atApplicantsExperienceRepository.findOne(id);
+        AtApplicantsExperience atApplicantsExperience = atApplicantsExperienceRepository.findById(id);
         return ResponseUtil.wrapOrNotFound(Optional.ofNullable(atApplicantsExperience));
     }
 
@@ -140,25 +134,7 @@ public class AtApplicantsExperienceResource {
     public ResponseEntity<Void> deleteAtApplicantsExperience(@PathVariable Long id) {
         log.debug("REST request to delete AtApplicantsExperience : {}", id);
         atApplicantsExperienceRepository.delete(id);
-        atApplicantsExperienceSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * SEARCH  /_search/at-applicants-experiences?query=:query : search for the atApplicantsExperience corresponding
-     * to the query.
-     *
-     * @param query the query of the atApplicantsExperience search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-applicants-experiences")
-    @Timed
-    public ResponseEntity<List<AtApplicantsExperience>> searchAtApplicantsExperiences(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtApplicantsExperiences for query {}", query);
-        Page<AtApplicantsExperience> page = atApplicantsExperienceSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-applicants-experiences");
-        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
     }
 
 }
