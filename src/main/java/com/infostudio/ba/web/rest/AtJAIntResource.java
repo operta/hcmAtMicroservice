@@ -23,8 +23,6 @@ import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
 /**
  * REST controller for managing AtJAInt.
  */

@@ -2,13 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtAccomplishmentTypes;
-
 import com.infostudio.ba.repository.AtAccomplishmentTypesRepository;
+import com.infostudio.ba.service.dto.AtAccomplishmentTypesDTO;
+import com.infostudio.ba.service.mapper.AtAccomplishmentTypesMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtAccomplishmentTypesDTO;
-import com.infostudio.ba.service.mapper.AtAccomplishmentTypesMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +21,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
 
 /**
  * REST controller for managing AtAccomplishmentTypes.

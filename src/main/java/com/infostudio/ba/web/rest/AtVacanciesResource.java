@@ -25,8 +25,6 @@ import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.util.*;
 
-import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
-
 /**
  * REST controller for managing AtVacancies.
  */

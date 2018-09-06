@@ -6,9 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 
-import org.hibernate.annotations.NotFound;
-import org.hibernate.annotations.NotFoundAction;
-import org.springframework.data.elasticsearch.annotations.Document;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -19,7 +17,6 @@ import java.util.Objects;
 @Entity
 @Table(name = "at_job_applications")
 @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
-@Document(indexName = "atjobapplications")
 public class AtJobApplications extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
