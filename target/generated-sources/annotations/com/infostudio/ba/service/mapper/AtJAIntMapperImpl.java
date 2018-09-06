@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-09-06T15:49:13+0200",
+    date = "2018-09-06T16:15:36+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -61,9 +61,6 @@ public class AtJAIntMapperImpl implements AtJAIntMapper {
             atJAIntDTO.setJobApplicationIdId( id );
         }
         atJAIntDTO.setCreatedBy( atJAInt.getCreatedBy() );
-        atJAIntDTO.setCreatedAt( atJAInt.getcreatedAt() );
-        atJAIntDTO.setUpdatedBy( atJAInt.getupdatedBy() );
-        atJAIntDTO.setUpdatedAt( atJAInt.getupdatedAt() );
         atJAIntDTO.setId( atJAInt.getId() );
         atJAIntDTO.setGrade( atJAInt.getGrade() );
         atJAIntDTO.setDescription( atJAInt.getDescription() );
@@ -83,9 +80,6 @@ public class AtJAIntMapperImpl implements AtJAIntMapper {
 
         atJAInt.setJobApplicationId( atJobApplicationsMapper.fromId( atJAIntDTO.getJobApplicationIdId() ) );
         atJAInt.setCreatedBy( atJAIntDTO.getCreatedBy() );
-        atJAInt.setcreatedAt( atJAIntDTO.getCreatedAt() );
-        atJAInt.setupdatedBy( atJAIntDTO.getUpdatedBy() );
-        atJAInt.setupdatedAt( atJAIntDTO.getUpdatedAt() );
         atJAInt.setId( atJAIntDTO.getId() );
         atJAInt.setGrade( atJAIntDTO.getGrade() );
         atJAInt.setDescription( atJAIntDTO.getDescription() );

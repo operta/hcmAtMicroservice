@@ -33,7 +33,8 @@ spring:
         livereload:
             enabled: false
     datasource:
-        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: oracle.jdbc.OracleDriver
+        dataSourceClassName: oracle.jdbc.pool.OracleDataSource
         url: jdbc:oracle:thin:@192.168.1.218:1521/pdb_generic.infostudio.ba
         username: hcm
         password: hcm
@@ -50,10 +51,6 @@ spring:
             hibernate.cache.hazelcast.instance_name: hcmAtMicroservice
             hibernate.cache.use_minimal_puts: true
             hibernate.cache.hazelcast.use_lite_member: true
-    data:
-        elasticsearch:
-            cluster-name:
-            cluster-nodes: localhost:9300
     mail:
         host: localhost
         port: 25

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-09-06T15:49:13+0200",
+    date = "2018-09-06T16:15:36+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -24,9 +24,6 @@ public class AtVacanciesStatusesMapperImpl implements AtVacanciesStatusesMapper 
         AtVacanciesStatuses atVacanciesStatuses = new AtVacanciesStatuses();
 
         atVacanciesStatuses.setCreatedBy( dto.getCreatedBy() );
-        atVacanciesStatuses.setcreatedAt( dto.getCreatedAt() );
-        atVacanciesStatuses.setupdatedBy( dto.getUpdatedBy() );
-        atVacanciesStatuses.setupdatedAt( dto.getUpdatedAt() );
         atVacanciesStatuses.setId( dto.getId() );
         atVacanciesStatuses.setStatus( dto.getStatus() );
 
@@ -42,9 +39,6 @@ public class AtVacanciesStatusesMapperImpl implements AtVacanciesStatusesMapper 
         AtVacanciesStatusesDTO atVacanciesStatusesDTO = new AtVacanciesStatusesDTO();
 
         atVacanciesStatusesDTO.setCreatedBy( entity.getCreatedBy() );
-        atVacanciesStatusesDTO.setCreatedAt( entity.getcreatedAt() );
-        atVacanciesStatusesDTO.setUpdatedBy( entity.getupdatedBy() );
-        atVacanciesStatusesDTO.setUpdatedAt( entity.getupdatedAt() );
         atVacanciesStatusesDTO.setId( entity.getId() );
         atVacanciesStatusesDTO.setStatus( entity.getStatus() );
 

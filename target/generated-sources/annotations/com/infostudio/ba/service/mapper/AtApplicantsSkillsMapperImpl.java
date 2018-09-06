@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-09-06T15:49:13+0200",
+    date = "2018-09-06T16:15:35+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -65,9 +65,6 @@ public class AtApplicantsSkillsMapperImpl implements AtApplicantsSkillsMapper {
             atApplicantsSkillsDTO.setIdApplicantId( id );
         }
         atApplicantsSkillsDTO.setCreatedBy( atApplicantsSkills.getCreatedBy() );
-        atApplicantsSkillsDTO.setCreatedAt( atApplicantsSkills.getcreatedAt() );
-        atApplicantsSkillsDTO.setUpdatedBy( atApplicantsSkills.getupdatedBy() );
-        atApplicantsSkillsDTO.setUpdatedAt( atApplicantsSkills.getupdatedAt() );
         atApplicantsSkillsDTO.setId( atApplicantsSkills.getId() );
         atApplicantsSkillsDTO.setSkill( atApplicantsSkills.getSkill() );
         atApplicantsSkillsDTO.setDateSkill( atApplicantsSkills.getDateSkill() );
@@ -88,9 +85,6 @@ public class AtApplicantsSkillsMapperImpl implements AtApplicantsSkillsMapper {
 
         atApplicantsSkills.setIdApplicant( atApplicantsMapper.fromId( atApplicantsSkillsDTO.getIdApplicantId() ) );
         atApplicantsSkills.setCreatedBy( atApplicantsSkillsDTO.getCreatedBy() );
-        atApplicantsSkills.setcreatedAt( atApplicantsSkillsDTO.getCreatedAt() );
-        atApplicantsSkills.setupdatedBy( atApplicantsSkillsDTO.getUpdatedBy() );
-        atApplicantsSkills.setupdatedAt( atApplicantsSkillsDTO.getUpdatedAt() );
         atApplicantsSkills.setId( atApplicantsSkillsDTO.getId() );
         atApplicantsSkills.setSkill( atApplicantsSkillsDTO.getSkill() );
         atApplicantsSkills.setDateSkill( atApplicantsSkillsDTO.getDateSkill() );

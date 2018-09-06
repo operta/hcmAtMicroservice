@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-09-06T15:49:13+0200",
+    date = "2018-09-06T16:15:36+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -65,9 +65,6 @@ public class AtApplicantsDocumentsMapperImpl implements AtApplicantsDocumentsMap
             atApplicantsDocumentsDTO.setIdApplicantId( id );
         }
         atApplicantsDocumentsDTO.setCreatedBy( atApplicantsDocuments.getCreatedBy() );
-        atApplicantsDocumentsDTO.setCreatedAt( atApplicantsDocuments.getcreatedAt() );
-        atApplicantsDocumentsDTO.setUpdatedBy( atApplicantsDocuments.getupdatedBy() );
-        atApplicantsDocumentsDTO.setUpdatedAt( atApplicantsDocuments.getupdatedAt() );
         atApplicantsDocumentsDTO.setId( atApplicantsDocuments.getId() );
         atApplicantsDocumentsDTO.setName( atApplicantsDocuments.getName() );
         atApplicantsDocumentsDTO.setDescription( atApplicantsDocuments.getDescription() );
@@ -90,9 +87,6 @@ public class AtApplicantsDocumentsMapperImpl implements AtApplicantsDocumentsMap
 
         atApplicantsDocuments.setIdApplicant( atApplicantsMapper.fromId( atApplicantsDocumentsDTO.getIdApplicantId() ) );
         atApplicantsDocuments.setCreatedBy( atApplicantsDocumentsDTO.getCreatedBy() );
-        atApplicantsDocuments.setcreatedAt( atApplicantsDocumentsDTO.getCreatedAt() );
-        atApplicantsDocuments.setupdatedBy( atApplicantsDocumentsDTO.getUpdatedBy() );
-        atApplicantsDocuments.setupdatedAt( atApplicantsDocumentsDTO.getUpdatedAt() );
         atApplicantsDocuments.setId( atApplicantsDocumentsDTO.getId() );
         atApplicantsDocuments.setName( atApplicantsDocumentsDTO.getName() );
         atApplicantsDocuments.setDescription( atApplicantsDocumentsDTO.getDescription() );

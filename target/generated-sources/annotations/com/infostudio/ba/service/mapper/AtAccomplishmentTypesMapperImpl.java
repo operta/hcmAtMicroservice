@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-09-06T15:49:13+0200",
+    date = "2018-09-06T16:15:36+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -24,9 +24,6 @@ public class AtAccomplishmentTypesMapperImpl implements AtAccomplishmentTypesMap
         AtAccomplishmentTypes atAccomplishmentTypes = new AtAccomplishmentTypes();
 
         atAccomplishmentTypes.setCreatedBy( dto.getCreatedBy() );
-        atAccomplishmentTypes.setcreatedAt( dto.getCreatedAt() );
-        atAccomplishmentTypes.setupdatedBy( dto.getUpdatedBy() );
-        atAccomplishmentTypes.setupdatedAt( dto.getUpdatedAt() );
         atAccomplishmentTypes.setId( dto.getId() );
         atAccomplishmentTypes.setCode( dto.getCode() );
         atAccomplishmentTypes.setName( dto.getName() );
@@ -44,9 +41,6 @@ public class AtAccomplishmentTypesMapperImpl implements AtAccomplishmentTypesMap
         AtAccomplishmentTypesDTO atAccomplishmentTypesDTO = new AtAccomplishmentTypesDTO();
 
         atAccomplishmentTypesDTO.setCreatedBy( entity.getCreatedBy() );
-        atAccomplishmentTypesDTO.setCreatedAt( entity.getcreatedAt() );
-        atAccomplishmentTypesDTO.setUpdatedBy( entity.getupdatedBy() );
-        atAccomplishmentTypesDTO.setUpdatedAt( entity.getupdatedAt() );
         atAccomplishmentTypesDTO.setId( entity.getId() );
         atAccomplishmentTypesDTO.setCode( entity.getCode() );
         atAccomplishmentTypesDTO.setName( entity.getName() );

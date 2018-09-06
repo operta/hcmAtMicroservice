@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-09-06T15:49:13+0200",
+    date = "2018-09-06T16:15:36+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -68,9 +68,6 @@ public class AtJobAppNotificationsMapperImpl implements AtJobAppNotificationsMap
             atJobAppNotificationsDTO.setIdNotificationId( id1 );
         }
         atJobAppNotificationsDTO.setCreatedBy( atJobAppNotifications.getCreatedBy() );
-        atJobAppNotificationsDTO.setCreatedAt( atJobAppNotifications.getcreatedAt() );
-        atJobAppNotificationsDTO.setUpdatedBy( atJobAppNotifications.getupdatedBy() );
-        atJobAppNotificationsDTO.setUpdatedAt( atJobAppNotifications.getupdatedAt() );
         atJobAppNotificationsDTO.setId( atJobAppNotifications.getId() );
         atJobAppNotificationsDTO.setDateSent( atJobAppNotifications.getDateSent() );
         atJobAppNotificationsDTO.setIsActive( atJobAppNotifications.getIsActive() );
@@ -89,9 +86,6 @@ public class AtJobAppNotificationsMapperImpl implements AtJobAppNotificationsMap
         atJobAppNotifications.setIdJobApplication( atJobApplicationsMapper.fromId( atJobAppNotificationsDTO.getIdJobApplicationId() ) );
         atJobAppNotifications.setIdNotification( atNotificationTemplatesMapper.fromId( atJobAppNotificationsDTO.getIdNotificationId() ) );
         atJobAppNotifications.setCreatedBy( atJobAppNotificationsDTO.getCreatedBy() );
-        atJobAppNotifications.setcreatedAt( atJobAppNotificationsDTO.getCreatedAt() );
-        atJobAppNotifications.setupdatedBy( atJobAppNotificationsDTO.getUpdatedBy() );
-        atJobAppNotifications.setupdatedAt( atJobAppNotificationsDTO.getUpdatedAt() );
         atJobAppNotifications.setId( atJobAppNotificationsDTO.getId() );
         atJobAppNotifications.setDateSent( atJobAppNotificationsDTO.getDateSent() );
         atJobAppNotifications.setIsActive( atJobAppNotificationsDTO.getIsActive() );

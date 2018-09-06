@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-09-06T15:49:13+0200",
+    date = "2018-09-06T16:15:36+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -65,9 +65,6 @@ public class AtApplicantsContactsMapperImpl implements AtApplicantsContactsMappe
             atApplicantsContactsDTO.setIdApllicantId( id );
         }
         atApplicantsContactsDTO.setCreatedBy( atApplicantsContacts.getCreatedBy() );
-        atApplicantsContactsDTO.setCreatedAt( atApplicantsContacts.getcreatedAt() );
-        atApplicantsContactsDTO.setUpdatedBy( atApplicantsContacts.getupdatedBy() );
-        atApplicantsContactsDTO.setUpdatedAt( atApplicantsContacts.getupdatedAt() );
         atApplicantsContactsDTO.setId( atApplicantsContacts.getId() );
         atApplicantsContactsDTO.setContact( atApplicantsContacts.getContact() );
         atApplicantsContactsDTO.setDescription( atApplicantsContacts.getDescription() );
@@ -86,9 +83,6 @@ public class AtApplicantsContactsMapperImpl implements AtApplicantsContactsMappe
 
         atApplicantsContacts.setIdApllicant( atApplicantsMapper.fromId( atApplicantsContactsDTO.getIdApllicantId() ) );
         atApplicantsContacts.setCreatedBy( atApplicantsContactsDTO.getCreatedBy() );
-        atApplicantsContacts.setcreatedAt( atApplicantsContactsDTO.getCreatedAt() );
-        atApplicantsContacts.setupdatedBy( atApplicantsContactsDTO.getUpdatedBy() );
-        atApplicantsContacts.setupdatedAt( atApplicantsContactsDTO.getUpdatedAt() );
         atApplicantsContacts.setId( atApplicantsContactsDTO.getId() );
         atApplicantsContacts.setContact( atApplicantsContactsDTO.getContact() );
         atApplicantsContacts.setDescription( atApplicantsContactsDTO.getDescription() );

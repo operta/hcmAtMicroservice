@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2018-09-06T15:49:14+0200",
+    date = "2018-09-06T16:15:35+0200",
     comments = "version: 1.2.0.Final, compiler: javac, environment: Java 1.8.0_171 (Oracle Corporation)"
 )
 @Component
@@ -24,9 +24,6 @@ public class AtApplicantsMapperImpl implements AtApplicantsMapper {
         AtApplicants atApplicants = new AtApplicants();
 
         atApplicants.setCreatedBy( dto.getCreatedBy() );
-        atApplicants.setcreatedAt( dto.getCreatedAt() );
-        atApplicants.setupdatedBy( dto.getUpdatedBy() );
-        atApplicants.setupdatedAt( dto.getUpdatedAt() );
         atApplicants.setId( dto.getId() );
         atApplicants.setName( dto.getName() );
         atApplicants.setSurname( dto.getSurname() );
@@ -60,9 +57,6 @@ public class AtApplicantsMapperImpl implements AtApplicantsMapper {
         AtApplicantsDTO atApplicantsDTO = new AtApplicantsDTO();
 
         atApplicantsDTO.setCreatedBy( entity.getCreatedBy() );
-        atApplicantsDTO.setCreatedAt( entity.getcreatedAt() );
-        atApplicantsDTO.setUpdatedBy( entity.getupdatedBy() );
-        atApplicantsDTO.setUpdatedAt( entity.getupdatedAt() );
         atApplicantsDTO.setId( entity.getId() );
         atApplicantsDTO.setName( entity.getName() );
         atApplicantsDTO.setSurname( entity.getSurname() );
