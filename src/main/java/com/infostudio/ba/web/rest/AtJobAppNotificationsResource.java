@@ -2,14 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtJobAppNotifications;
-
 import com.infostudio.ba.repository.AtJobAppNotificationsRepository;
-import com.infostudio.ba.repository.search.AtJobAppNotificationsSearchRepository;
+import com.infostudio.ba.service.dto.AtJobAppNotificationsDTO;
+import com.infostudio.ba.service.mapper.AtJobAppNotificationsMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtJobAppNotificationsDTO;
-import com.infostudio.ba.service.mapper.AtJobAppNotificationsMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtJobAppNotifications.
@@ -46,12 +41,10 @@ public class AtJobAppNotificationsResource {
 
     private final AtJobAppNotificationsMapper atJobAppNotificationsMapper;
 
-    private final AtJobAppNotificationsSearchRepository atJobAppNotificationsSearchRepository;
 
-    public AtJobAppNotificationsResource(AtJobAppNotificationsRepository atJobAppNotificationsRepository, AtJobAppNotificationsMapper atJobAppNotificationsMapper, AtJobAppNotificationsSearchRepository atJobAppNotificationsSearchRepository) {
+    public AtJobAppNotificationsResource(AtJobAppNotificationsRepository atJobAppNotificationsRepository, AtJobAppNotificationsMapper atJobAppNotificationsMapper) {
         this.atJobAppNotificationsRepository = atJobAppNotificationsRepository;
         this.atJobAppNotificationsMapper = atJobAppNotificationsMapper;
-        this.atJobAppNotificationsSearchRepository = atJobAppNotificationsSearchRepository;
     }
 
     /**
@@ -71,7 +64,6 @@ public class AtJobAppNotificationsResource {
         AtJobAppNotifications atJobAppNotifications = atJobAppNotificationsMapper.toEntity(atJobAppNotificationsDTO);
         atJobAppNotifications = atJobAppNotificationsRepository.save(atJobAppNotifications);
         AtJobAppNotificationsDTO result = atJobAppNotificationsMapper.toDto(atJobAppNotifications);
-        atJobAppNotificationsSearchRepository.save(atJobAppNotifications);
         return ResponseEntity.created(new URI("/api/at-job-app-notifications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +88,6 @@ public class AtJobAppNotificationsResource {
         AtJobAppNotifications atJobAppNotifications = atJobAppNotificationsMapper.toEntity(atJobAppNotificationsDTO);
         atJobAppNotifications = atJobAppNotificationsRepository.save(atJobAppNotifications);
         AtJobAppNotificationsDTO result = atJobAppNotificationsMapper.toDto(atJobAppNotifications);
-        atJobAppNotificationsSearchRepository.save(atJobAppNotifications);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atJobAppNotificationsDTO.getId().toString()))
             .body(result);
@@ -143,25 +134,7 @@ public class AtJobAppNotificationsResource {
     public ResponseEntity<Void> deleteAtJobAppNotifications(@PathVariable Long id) {
         log.debug("REST request to delete AtJobAppNotifications : {}", id);
         atJobAppNotificationsRepository.delete(id);
-        atJobAppNotificationsSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * SEARCH  /_search/at-job-app-notifications?query=:query : search for the atJobAppNotifications corresponding
-     * to the query.
-     *
-     * @param query the query of the atJobAppNotifications search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-job-app-notifications")
-    @Timed
-    public ResponseEntity<List<AtJobAppNotificationsDTO>> searchAtJobAppNotifications(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtJobAppNotifications for query {}", query);
-        Page<AtJobAppNotifications> page = atJobAppNotificationsSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-job-app-notifications");
-        return new ResponseEntity<>(atJobAppNotificationsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
 
 }

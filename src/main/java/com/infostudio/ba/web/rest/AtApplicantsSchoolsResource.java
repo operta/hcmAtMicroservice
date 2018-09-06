@@ -2,14 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtApplicantsSchools;
-
 import com.infostudio.ba.repository.AtApplicantsSchoolsRepository;
-import com.infostudio.ba.repository.search.AtApplicantsSchoolsSearchRepository;
+import com.infostudio.ba.service.dto.AtApplicantsSchoolsDTO;
+import com.infostudio.ba.service.mapper.AtApplicantsSchoolsMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtApplicantsSchoolsDTO;
-import com.infostudio.ba.service.mapper.AtApplicantsSchoolsMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtApplicantsSchools.
@@ -45,12 +40,10 @@ public class AtApplicantsSchoolsResource {
 
     private final AtApplicantsSchoolsMapper atApplicantsSchoolsMapper;
 
-    private final AtApplicantsSchoolsSearchRepository atApplicantsSchoolsSearchRepository;
 
-    public AtApplicantsSchoolsResource(AtApplicantsSchoolsRepository atApplicantsSchoolsRepository, AtApplicantsSchoolsMapper atApplicantsSchoolsMapper, AtApplicantsSchoolsSearchRepository atApplicantsSchoolsSearchRepository) {
+    public AtApplicantsSchoolsResource(AtApplicantsSchoolsRepository atApplicantsSchoolsRepository, AtApplicantsSchoolsMapper atApplicantsSchoolsMapper) {
         this.atApplicantsSchoolsRepository = atApplicantsSchoolsRepository;
         this.atApplicantsSchoolsMapper = atApplicantsSchoolsMapper;
-        this.atApplicantsSchoolsSearchRepository = atApplicantsSchoolsSearchRepository;
     }
 
     /**
@@ -70,7 +63,6 @@ public class AtApplicantsSchoolsResource {
         AtApplicantsSchools atApplicantsSchools = atApplicantsSchoolsMapper.toEntity(atApplicantsSchoolsDTO);
         atApplicantsSchools = atApplicantsSchoolsRepository.save(atApplicantsSchools);
         AtApplicantsSchoolsDTO result = atApplicantsSchoolsMapper.toDto(atApplicantsSchools);
-        atApplicantsSchoolsSearchRepository.save(atApplicantsSchools);
         return ResponseEntity.created(new URI("/api/at-applicants-schools/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -95,7 +87,6 @@ public class AtApplicantsSchoolsResource {
         AtApplicantsSchools atApplicantsSchools = atApplicantsSchoolsMapper.toEntity(atApplicantsSchoolsDTO);
         atApplicantsSchools = atApplicantsSchoolsRepository.save(atApplicantsSchools);
         AtApplicantsSchoolsDTO result = atApplicantsSchoolsMapper.toDto(atApplicantsSchools);
-        atApplicantsSchoolsSearchRepository.save(atApplicantsSchools);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atApplicantsSchoolsDTO.getId().toString()))
             .body(result);
@@ -151,25 +142,8 @@ public class AtApplicantsSchoolsResource {
     public ResponseEntity<Void> deleteAtApplicantsSchools(@PathVariable Long id) {
         log.debug("REST request to delete AtApplicantsSchools : {}", id);
         atApplicantsSchoolsRepository.delete(id);
-        atApplicantsSchoolsSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-applicants-schools?query=:query : search for the atApplicantsSchools corresponding
-     * to the query.
-     *
-     * @param query the query of the atApplicantsSchools search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-applicants-schools")
-    @Timed
-    public ResponseEntity<List<AtApplicantsSchoolsDTO>> searchAtApplicantsSchools(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtApplicantsSchools for query {}", query);
-        Page<AtApplicantsSchools> page = atApplicantsSchoolsSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-applicants-schools");
-        return new ResponseEntity<>(atApplicantsSchoolsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

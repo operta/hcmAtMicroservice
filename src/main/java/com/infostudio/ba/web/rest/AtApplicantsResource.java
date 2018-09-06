@@ -2,14 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtApplicants;
-
 import com.infostudio.ba.repository.AtApplicantsRepository;
-import com.infostudio.ba.repository.search.AtApplicantsSearchRepository;
+import com.infostudio.ba.service.dto.AtApplicantsDTO;
+import com.infostudio.ba.service.mapper.AtApplicantsMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtApplicantsDTO;
-import com.infostudio.ba.service.mapper.AtApplicantsMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtApplicants.
@@ -46,12 +41,10 @@ public class AtApplicantsResource {
 
     private final AtApplicantsMapper atApplicantsMapper;
 
-    private final AtApplicantsSearchRepository atApplicantsSearchRepository;
 
-    public AtApplicantsResource(AtApplicantsRepository atApplicantsRepository, AtApplicantsMapper atApplicantsMapper, AtApplicantsSearchRepository atApplicantsSearchRepository) {
+    public AtApplicantsResource(AtApplicantsRepository atApplicantsRepository, AtApplicantsMapper atApplicantsMapper) {
         this.atApplicantsRepository = atApplicantsRepository;
         this.atApplicantsMapper = atApplicantsMapper;
-        this.atApplicantsSearchRepository = atApplicantsSearchRepository;
     }
 
     /**
@@ -75,7 +68,6 @@ public class AtApplicantsResource {
         AtApplicants atApplicants = atApplicantsMapper.toEntity(atApplicantsDTO);
         atApplicants = atApplicantsRepository.save(atApplicants);
         AtApplicantsDTO result = atApplicantsMapper.toDto(atApplicants);
-        atApplicantsSearchRepository.save(atApplicants);
         return ResponseEntity.created(new URI("/api/at-applicants/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -100,7 +92,6 @@ public class AtApplicantsResource {
         AtApplicants atApplicants = atApplicantsMapper.toEntity(atApplicantsDTO);
         atApplicants = atApplicantsRepository.save(atApplicants);
         AtApplicantsDTO result = atApplicantsMapper.toDto(atApplicants);
-        atApplicantsSearchRepository.save(atApplicants);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atApplicantsDTO.getId().toString()))
             .body(result);
@@ -164,25 +155,9 @@ public class AtApplicantsResource {
     public ResponseEntity<Void> deleteAtApplicants(@PathVariable Long id) {
         log.debug("REST request to delete AtApplicants : {}", id);
         atApplicantsRepository.delete(id);
-        atApplicantsSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-applicants?query=:query : search for the atApplicants corresponding
-     * to the query.
-     *
-     * @param query the query of the atApplicants search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-applicants")
-    @Timed
-    public ResponseEntity<List<AtApplicantsDTO>> searchAtApplicants(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtApplicants for query {}", query);
-        Page<AtApplicants> page = atApplicantsSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-applicants");
-        return new ResponseEntity<>(atApplicantsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
+
 
 }

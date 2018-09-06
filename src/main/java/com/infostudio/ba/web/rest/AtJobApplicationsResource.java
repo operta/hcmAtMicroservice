@@ -2,14 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.*;
-
 import com.infostudio.ba.repository.*;
-import com.infostudio.ba.repository.search.AtJobApplicationsSearchRepository;
+import com.infostudio.ba.service.dto.AtJobApplicationsDTO;
+import com.infostudio.ba.service.mapper.AtJobApplicationsMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtJobApplicationsDTO;
-import com.infostudio.ba.service.mapper.AtJobApplicationsMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,14 +21,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtJobApplications.
@@ -51,20 +46,18 @@ public class AtJobApplicationsResource {
 
     private final AtJobApplicationsMapper atJobApplicationsMapper;
 
-    private final AtJobApplicationsSearchRepository atJobApplicationsSearchRepository;
 
     private final AtNotificationTemplatesRepository atNotificationTemplatesRepository;
 
     private final AtJobAppNotificationsRepository atJobAppNotificationsRepository;
 
-    public AtJobApplicationsResource(AtJobApplicationsRepository atJobApplicationsRepository, AtJobApplicationsMapper atJobApplicationsMapper, AtJobApplicationsSearchRepository atJobApplicationsSearchRepository,
+    public AtJobApplicationsResource(AtJobApplicationsRepository atJobApplicationsRepository, AtJobApplicationsMapper atJobApplicationsMapper,
                                      AtJobApplicationStatusesRepository atJobApplicationStatusesRepository,
                                      AtJobApplicantHistoryRepository atJobApplicantHistoryRepository,
                                      AtNotificationTemplatesRepository atNotificationTemplatesRepository,
                                      AtJobAppNotificationsRepository atJobAppNotificationsRepository) {
         this.atJobApplicationsRepository = atJobApplicationsRepository;
         this.atJobApplicationsMapper = atJobApplicationsMapper;
-        this.atJobApplicationsSearchRepository = atJobApplicationsSearchRepository;
         this.atJobApplicationStatusesRepository = atJobApplicationStatusesRepository;
         this.atJobApplicantHistoryRepository = atJobApplicantHistoryRepository;
         this.atNotificationTemplatesRepository = atNotificationTemplatesRepository;
@@ -88,7 +81,6 @@ public class AtJobApplicationsResource {
         AtJobApplications atJobApplications = atJobApplicationsMapper.toEntity(atJobApplicationsDTO);
         atJobApplications = atJobApplicationsRepository.save(atJobApplications);
         AtJobApplicationsDTO result = atJobApplicationsMapper.toDto(atJobApplications);
-        atJobApplicationsSearchRepository.save(atJobApplications);
         return ResponseEntity.created(new URI("/api/at-job-applications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -139,7 +131,6 @@ public class AtJobApplicationsResource {
 
         atJobApplications = atJobApplicationsRepository.save(atJobApplications);
         AtJobApplicationsDTO result = atJobApplicationsMapper.toDto(atJobApplications);
-        atJobApplicationsSearchRepository.save(atJobApplications);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atJobApplicationsDTO.getId().toString()))
             .body(result);
@@ -225,7 +216,6 @@ public class AtJobApplicationsResource {
         AtJobApplications atJobApplications = atJobApplicationsMapper.toEntity(atJobApplicationsDTO);
         atJobApplications = atJobApplicationsRepository.save(atJobApplications);
         AtJobApplicationsDTO result = atJobApplicationsMapper.toDto(atJobApplications);
-        atJobApplicationsSearchRepository.save(atJobApplications);
         return ResponseEntity.created(new URI("/api/at-job-applications/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -259,25 +249,7 @@ public class AtJobApplicationsResource {
     public ResponseEntity<Void> deleteAtJobApplications(@PathVariable Long id) {
         log.debug("REST request to delete AtJobApplications : {}", id);
         atJobApplicationsRepository.delete(id);
-        atJobApplicationsSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
-    }
-
-    /**
-     * SEARCH  /_search/at-job-applications?query=:query : search for the atJobApplications corresponding
-     * to the query.
-     *
-     * @param query the query of the atJobApplications search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-job-applications")
-    @Timed
-    public ResponseEntity<List<AtJobApplicationsDTO>> searchAtJobApplications(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtJobApplications for query {}", query);
-        Page<AtJobApplications> page = atJobApplicationsSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-job-applications");
-        return new ResponseEntity<>(atJobApplicationsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
     }
 
 }

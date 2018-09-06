@@ -2,14 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtJobApplicationStatuses;
-
 import com.infostudio.ba.repository.AtJobApplicationStatusesRepository;
-import com.infostudio.ba.repository.search.AtJobApplicationStatusesSearchRepository;
+import com.infostudio.ba.service.dto.AtJobApplicationStatusesDTO;
+import com.infostudio.ba.service.mapper.AtJobApplicationStatusesMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtJobApplicationStatusesDTO;
-import com.infostudio.ba.service.mapper.AtJobApplicationStatusesMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtJobApplicationStatuses.
@@ -46,12 +41,10 @@ public class AtJobApplicationStatusesResource {
 
     private final AtJobApplicationStatusesMapper atJobApplicationStatusesMapper;
 
-    private final AtJobApplicationStatusesSearchRepository atJobApplicationStatusesSearchRepository;
 
-    public AtJobApplicationStatusesResource(AtJobApplicationStatusesRepository atJobApplicationStatusesRepository, AtJobApplicationStatusesMapper atJobApplicationStatusesMapper, AtJobApplicationStatusesSearchRepository atJobApplicationStatusesSearchRepository) {
+    public AtJobApplicationStatusesResource(AtJobApplicationStatusesRepository atJobApplicationStatusesRepository, AtJobApplicationStatusesMapper atJobApplicationStatusesMapper) {
         this.atJobApplicationStatusesRepository = atJobApplicationStatusesRepository;
         this.atJobApplicationStatusesMapper = atJobApplicationStatusesMapper;
-        this.atJobApplicationStatusesSearchRepository = atJobApplicationStatusesSearchRepository;
     }
 
     /**
@@ -71,7 +64,6 @@ public class AtJobApplicationStatusesResource {
         AtJobApplicationStatuses atJobApplicationStatuses = atJobApplicationStatusesMapper.toEntity(atJobApplicationStatusesDTO);
         atJobApplicationStatuses = atJobApplicationStatusesRepository.save(atJobApplicationStatuses);
         AtJobApplicationStatusesDTO result = atJobApplicationStatusesMapper.toDto(atJobApplicationStatuses);
-        atJobApplicationStatusesSearchRepository.save(atJobApplicationStatuses);
         return ResponseEntity.created(new URI("/api/at-job-application-statuses/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -100,7 +92,6 @@ public class AtJobApplicationStatusesResource {
 
         atJobApplicationStatuses = atJobApplicationStatusesRepository.save(atJobApplicationStatuses);
         AtJobApplicationStatusesDTO result = atJobApplicationStatusesMapper.toDto(atJobApplicationStatuses);
-        atJobApplicationStatusesSearchRepository.save(atJobApplicationStatuses);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atJobApplicationStatusesDTO.getId().toString()))
             .body(result);
@@ -147,25 +138,8 @@ public class AtJobApplicationStatusesResource {
     public ResponseEntity<Void> deleteAtJobApplicationStatuses(@PathVariable Long id) {
         log.debug("REST request to delete AtJobApplicationStatuses : {}", id);
         atJobApplicationStatusesRepository.delete(id);
-        atJobApplicationStatusesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-job-application-statuses?query=:query : search for the atJobApplicationStatuses corresponding
-     * to the query.
-     *
-     * @param query the query of the atJobApplicationStatuses search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-job-application-statuses")
-    @Timed
-    public ResponseEntity<List<AtJobApplicationStatusesDTO>> searchAtJobApplicationStatuses(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtJobApplicationStatuses for query {}", query);
-        Page<AtJobApplicationStatuses> page = atJobApplicationStatusesSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-job-application-statuses");
-        return new ResponseEntity<>(atJobApplicationStatusesMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

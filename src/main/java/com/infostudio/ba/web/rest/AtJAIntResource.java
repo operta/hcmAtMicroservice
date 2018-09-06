@@ -2,14 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtJAInt;
-
 import com.infostudio.ba.repository.AtJAIntRepository;
-import com.infostudio.ba.repository.search.AtJAIntSearchRepository;
+import com.infostudio.ba.service.dto.AtJAIntDTO;
+import com.infostudio.ba.service.mapper.AtJAIntMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtJAIntDTO;
-import com.infostudio.ba.service.mapper.AtJAIntMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,13 +20,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtJAInt.
@@ -45,12 +40,10 @@ public class AtJAIntResource {
 
     private final AtJAIntMapper atJAIntMapper;
 
-    private final AtJAIntSearchRepository atJAIntSearchRepository;
 
-    public AtJAIntResource(AtJAIntRepository atJAIntRepository, AtJAIntMapper atJAIntMapper, AtJAIntSearchRepository atJAIntSearchRepository) {
+    public AtJAIntResource(AtJAIntRepository atJAIntRepository, AtJAIntMapper atJAIntMapper) {
         this.atJAIntRepository = atJAIntRepository;
         this.atJAIntMapper = atJAIntMapper;
-        this.atJAIntSearchRepository = atJAIntSearchRepository;
     }
 
     /**
@@ -70,7 +63,6 @@ public class AtJAIntResource {
         AtJAInt atJAInt = atJAIntMapper.toEntity(atJAIntDTO);
         atJAInt = atJAIntRepository.save(atJAInt);
         AtJAIntDTO result = atJAIntMapper.toDto(atJAInt);
-        atJAIntSearchRepository.save(atJAInt);
         return ResponseEntity.created(new URI("/api/at-ja-ints/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -95,7 +87,6 @@ public class AtJAIntResource {
         AtJAInt atJAInt = atJAIntMapper.toEntity(atJAIntDTO);
         atJAInt = atJAIntRepository.save(atJAInt);
         AtJAIntDTO result = atJAIntMapper.toDto(atJAInt);
-        atJAIntSearchRepository.save(atJAInt);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atJAIntDTO.getId().toString()))
             .body(result);
@@ -151,25 +142,8 @@ public class AtJAIntResource {
     public ResponseEntity<Void> deleteAtJAInt(@PathVariable Long id) {
         log.debug("REST request to delete AtJAInt : {}", id);
         atJAIntRepository.delete(id);
-        atJAIntSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-ja-ints?query=:query : search for the atJAInt corresponding
-     * to the query.
-     *
-     * @param query the query of the atJAInt search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-ja-ints")
-    @Timed
-    public ResponseEntity<List<AtJAIntDTO>> searchAtJAInts(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtJAInts for query {}", query);
-        Page<AtJAInt> page = atJAIntSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-ja-ints");
-        return new ResponseEntity<>(atJAIntMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
 
 }

@@ -2,14 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtApplicantsDocuments;
-
 import com.infostudio.ba.repository.AtApplicantsDocumentsRepository;
-import com.infostudio.ba.repository.search.AtApplicantsDocumentsSearchRepository;
+import com.infostudio.ba.service.dto.AtApplicantsDocumentsDTO;
+import com.infostudio.ba.service.mapper.AtApplicantsDocumentsMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtApplicantsDocumentsDTO;
-import com.infostudio.ba.service.mapper.AtApplicantsDocumentsMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtApplicantsDocuments.
@@ -46,12 +41,10 @@ public class AtApplicantsDocumentsResource {
 
     private final AtApplicantsDocumentsMapper atApplicantsDocumentsMapper;
 
-    private final AtApplicantsDocumentsSearchRepository atApplicantsDocumentsSearchRepository;
 
-    public AtApplicantsDocumentsResource(AtApplicantsDocumentsRepository atApplicantsDocumentsRepository, AtApplicantsDocumentsMapper atApplicantsDocumentsMapper, AtApplicantsDocumentsSearchRepository atApplicantsDocumentsSearchRepository) {
+    public AtApplicantsDocumentsResource(AtApplicantsDocumentsRepository atApplicantsDocumentsRepository, AtApplicantsDocumentsMapper atApplicantsDocumentsMapper) {
         this.atApplicantsDocumentsRepository = atApplicantsDocumentsRepository;
         this.atApplicantsDocumentsMapper = atApplicantsDocumentsMapper;
-        this.atApplicantsDocumentsSearchRepository = atApplicantsDocumentsSearchRepository;
     }
 
     /**
@@ -71,7 +64,6 @@ public class AtApplicantsDocumentsResource {
         AtApplicantsDocuments atApplicantsDocuments = atApplicantsDocumentsMapper.toEntity(atApplicantsDocumentsDTO);
         atApplicantsDocuments = atApplicantsDocumentsRepository.save(atApplicantsDocuments);
         AtApplicantsDocumentsDTO result = atApplicantsDocumentsMapper.toDto(atApplicantsDocuments);
-        atApplicantsDocumentsSearchRepository.save(atApplicantsDocuments);
         return ResponseEntity.created(new URI("/api/at-applicants-documents/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +88,6 @@ public class AtApplicantsDocumentsResource {
         AtApplicantsDocuments atApplicantsDocuments = atApplicantsDocumentsMapper.toEntity(atApplicantsDocumentsDTO);
         atApplicantsDocuments = atApplicantsDocumentsRepository.save(atApplicantsDocuments);
         AtApplicantsDocumentsDTO result = atApplicantsDocumentsMapper.toDto(atApplicantsDocuments);
-        atApplicantsDocumentsSearchRepository.save(atApplicantsDocuments);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atApplicantsDocumentsDTO.getId().toString()))
             .body(result);
@@ -152,25 +143,9 @@ public class AtApplicantsDocumentsResource {
     public ResponseEntity<Void> deleteAtApplicantsDocuments(@PathVariable Long id) {
         log.debug("REST request to delete AtApplicantsDocuments : {}", id);
         atApplicantsDocumentsRepository.delete(id);
-        atApplicantsDocumentsSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-applicants-documents?query=:query : search for the atApplicantsDocuments corresponding
-     * to the query.
-     *
-     * @param query the query of the atApplicantsDocuments search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-applicants-documents")
-    @Timed
-    public ResponseEntity<List<AtApplicantsDocumentsDTO>> searchAtApplicantsDocuments(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtApplicantsDocuments for query {}", query);
-        Page<AtApplicantsDocuments> page = atApplicantsDocumentsSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-applicants-documents");
-        return new ResponseEntity<>(atApplicantsDocumentsMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
+
 
 }

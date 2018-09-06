@@ -1,17 +1,13 @@
 package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
-import com.infostudio.ba.domain.AtApplicants;
 import com.infostudio.ba.domain.AtVacancies;
-
 import com.infostudio.ba.repository.AtVacanciesRepository;
-import com.infostudio.ba.repository.search.AtVacanciesSearchRepository;
-import com.infostudio.ba.service.dto.AtApplicantsDTO;
+import com.infostudio.ba.service.dto.AtVacanciesDTO;
+import com.infostudio.ba.service.mapper.AtVacanciesMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtVacanciesDTO;
-import com.infostudio.ba.service.mapper.AtVacanciesMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,13 +22,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtVacancies.
@@ -49,12 +42,10 @@ public class AtVacanciesResource {
 
     private final AtVacanciesMapper atVacanciesMapper;
 
-    private final AtVacanciesSearchRepository atVacanciesSearchRepository;
 
-    public AtVacanciesResource(AtVacanciesRepository atVacanciesRepository, AtVacanciesMapper atVacanciesMapper, AtVacanciesSearchRepository atVacanciesSearchRepository) {
+    public AtVacanciesResource(AtVacanciesRepository atVacanciesRepository, AtVacanciesMapper atVacanciesMapper) {
         this.atVacanciesRepository = atVacanciesRepository;
         this.atVacanciesMapper = atVacanciesMapper;
-        this.atVacanciesSearchRepository = atVacanciesSearchRepository;
     }
 
     /**
@@ -74,7 +65,6 @@ public class AtVacanciesResource {
         AtVacancies atVacancies = atVacanciesMapper.toEntity(atVacanciesDTO);
         atVacancies = atVacanciesRepository.save(atVacancies);
         AtVacanciesDTO result = atVacanciesMapper.toDto(atVacancies);
-        atVacanciesSearchRepository.save(atVacancies);
         return ResponseEntity.created(new URI("/api/at-vacancies/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -99,7 +89,6 @@ public class AtVacanciesResource {
         AtVacancies atVacancies = atVacanciesMapper.toEntity(atVacanciesDTO);
         atVacancies = atVacanciesRepository.save(atVacancies);
         AtVacanciesDTO result = atVacanciesMapper.toDto(atVacancies);
-        atVacanciesSearchRepository.save(atVacancies);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atVacanciesDTO.getId().toString()))
             .body(result);
@@ -206,25 +195,9 @@ public class AtVacanciesResource {
     public ResponseEntity<Void> deleteAtVacancies(@PathVariable Long id) {
         log.debug("REST request to delete AtVacancies : {}", id);
         atVacanciesRepository.delete(id);
-        atVacanciesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-vacancies?query=:query : search for the atVacancies corresponding
-     * to the query.
-     *
-     * @param query the query of the atVacancies search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-vacancies")
-    @Timed
-    public ResponseEntity<List<AtVacanciesDTO>> searchAtVacancies(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtVacancies for query {}", query);
-        Page<AtVacancies> page = atVacanciesSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-vacancies");
-        return new ResponseEntity<>(atVacanciesMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
+
 
 }

@@ -2,14 +2,12 @@ package com.infostudio.ba.web.rest;
 
 import com.codahale.metrics.annotation.Timed;
 import com.infostudio.ba.domain.AtActivityStatuses;
-
 import com.infostudio.ba.repository.AtActivityStatusesRepository;
-import com.infostudio.ba.repository.search.AtActivityStatusesSearchRepository;
+import com.infostudio.ba.service.dto.AtActivityStatusesDTO;
+import com.infostudio.ba.service.mapper.AtActivityStatusesMapper;
 import com.infostudio.ba.web.rest.errors.BadRequestAlertException;
 import com.infostudio.ba.web.rest.util.HeaderUtil;
 import com.infostudio.ba.web.rest.util.PaginationUtil;
-import com.infostudio.ba.service.dto.AtActivityStatusesDTO;
-import com.infostudio.ba.service.mapper.AtActivityStatusesMapper;
 import io.github.jhipster.web.util.ResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +21,10 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
-import static org.elasticsearch.index.query.QueryBuilders.*;
+import static org.elasticsearch.index.query.QueryBuilders.queryStringQuery;
 
 /**
  * REST controller for managing AtActivityStatuses.
@@ -46,12 +41,10 @@ public class AtActivityStatusesResource {
 
     private final AtActivityStatusesMapper atActivityStatusesMapper;
 
-    private final AtActivityStatusesSearchRepository atActivityStatusesSearchRepository;
 
-    public AtActivityStatusesResource(AtActivityStatusesRepository atActivityStatusesRepository, AtActivityStatusesMapper atActivityStatusesMapper, AtActivityStatusesSearchRepository atActivityStatusesSearchRepository) {
+    public AtActivityStatusesResource(AtActivityStatusesRepository atActivityStatusesRepository, AtActivityStatusesMapper atActivityStatusesMapper) {
         this.atActivityStatusesRepository = atActivityStatusesRepository;
         this.atActivityStatusesMapper = atActivityStatusesMapper;
-        this.atActivityStatusesSearchRepository = atActivityStatusesSearchRepository;
     }
 
     /**
@@ -71,7 +64,6 @@ public class AtActivityStatusesResource {
         AtActivityStatuses atActivityStatuses = atActivityStatusesMapper.toEntity(atActivityStatusesDTO);
         atActivityStatuses = atActivityStatusesRepository.save(atActivityStatuses);
         AtActivityStatusesDTO result = atActivityStatusesMapper.toDto(atActivityStatuses);
-        atActivityStatusesSearchRepository.save(atActivityStatuses);
         return ResponseEntity.created(new URI("/api/at-activity-statuses/" + result.getId()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, result.getId().toString()))
             .body(result);
@@ -96,7 +88,6 @@ public class AtActivityStatusesResource {
         AtActivityStatuses atActivityStatuses = atActivityStatusesMapper.toEntity(atActivityStatusesDTO);
         atActivityStatuses = atActivityStatusesRepository.save(atActivityStatuses);
         AtActivityStatusesDTO result = atActivityStatusesMapper.toDto(atActivityStatuses);
-        atActivityStatusesSearchRepository.save(atActivityStatuses);
         return ResponseEntity.ok()
             .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, atActivityStatusesDTO.getId().toString()))
             .body(result);
@@ -143,25 +134,9 @@ public class AtActivityStatusesResource {
     public ResponseEntity<Void> deleteAtActivityStatuses(@PathVariable Long id) {
         log.debug("REST request to delete AtActivityStatuses : {}", id);
         atActivityStatusesRepository.delete(id);
-        atActivityStatusesSearchRepository.delete(id);
         return ResponseEntity.ok().headers(HeaderUtil.createEntityDeletionAlert(ENTITY_NAME, id.toString())).build();
     }
 
-    /**
-     * SEARCH  /_search/at-activity-statuses?query=:query : search for the atActivityStatuses corresponding
-     * to the query.
-     *
-     * @param query the query of the atActivityStatuses search
-     * @param pageable the pagination information
-     * @return the result of the search
-     */
-    @GetMapping("/_search/at-activity-statuses")
-    @Timed
-    public ResponseEntity<List<AtActivityStatusesDTO>> searchAtActivityStatuses(@RequestParam String query, Pageable pageable) {
-        log.debug("REST request to search for a page of AtActivityStatuses for query {}", query);
-        Page<AtActivityStatuses> page = atActivityStatusesSearchRepository.search(queryStringQuery(query), pageable);
-        HttpHeaders headers = PaginationUtil.generateSearchPaginationHttpHeaders(query, page, "/api/_search/at-activity-statuses");
-        return new ResponseEntity<>(atActivityStatusesMapper.toDto(page.getContent()), headers, HttpStatus.OK);
-    }
+
 
 }
