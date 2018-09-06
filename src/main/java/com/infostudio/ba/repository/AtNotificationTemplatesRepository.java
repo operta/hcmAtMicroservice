@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface AtNotificationTemplatesRepository extends JpaRepository<AtNotificationTemplates, Long> {
-
+    AtNotificationTemplates findById(Long id);
 }

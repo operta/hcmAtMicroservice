@@ -12,5 +12,5 @@ import org.springframework.data.jpa.repository.*;
 @SuppressWarnings("unused")
 @Repository
 public interface AtAccomplishmentTypesRepository extends JpaRepository<AtAccomplishmentTypes, Long> {
-
+    AtAccomplishmentTypes findById(Long id);
 }

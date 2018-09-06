@@ -15,4 +15,5 @@ import org.springframework.data.jpa.repository.*;
 @Repository
 public interface AtJobApplicantHistoryRepository extends JpaRepository<AtJobApplicantHistory, Long> {
     List<AtJobApplicantHistory> findByIdJobApplicationId(Long id);
+    AtJobApplicantHistory findById(Long id);
 }

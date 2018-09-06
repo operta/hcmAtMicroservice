@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface AtApplicantsSchoolsRepository extends JpaRepository<AtApplicantsSchools, Long> {
     List<AtApplicantsSchools> findByIdApplicantId(Long id);
+    AtApplicantsSchools findById(Long id);
 }

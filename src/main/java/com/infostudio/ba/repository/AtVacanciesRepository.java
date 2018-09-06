@@ -20,4 +20,6 @@ public interface AtVacanciesRepository extends JpaRepository<AtVacancies, Long> 
     List<AtVacancies> findByNameContainingIgnoreCase(String name);
     List<AtVacancies> findByStatus(Integer id);
     List<AtVacancies> findByIdLocation(Integer id);
+
+    AtVacancies findById(Long id);
 }

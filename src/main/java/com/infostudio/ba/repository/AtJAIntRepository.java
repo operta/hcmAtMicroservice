@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface AtJAIntRepository extends JpaRepository<AtJAInt, Long> {
     List<AtJAInt> findByJobApplicationIdId(Long id);
+    AtJAInt findById(Long id);
 }

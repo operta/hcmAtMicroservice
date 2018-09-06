@@ -15,4 +15,5 @@ import java.util.List;
 @Repository
 public interface AtJobApplicationStatusesRepository extends JpaRepository<AtJobApplicationStatuses, Long> {
     AtJobApplicationStatuses findByName(String name);
+    AtJobApplicationStatuses findById(Long id);
 }
