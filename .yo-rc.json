@@ -16,7 +16,7 @@
     "databaseType": "sql",
     "devDatabaseType": "oracle",
     "prodDatabaseType": "oracle",
-    "searchEngine": "elasticsearch",
+    "searchEngine": false,
     "messageBroker": false,
     "serviceDiscoveryType": "eureka",
     "buildTool": "maven",
